@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sevy Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ Tokens (Sevy Palette) ============ */
+  :root {
+    /* Primary - Sevy Blues */
+    --primary-50:#F4F6FF; 
+    --primary-100:#CEDDF7; /* Pale Ice Blue */
+    --primary-200:#97B3F8; /* Light Blue */
+    --primary-500:#6D7BEC; /* Cornflower Blue */
+    --primary-600:#5876EC; /* Vibrant Cornflower */
+    --primary-700:#455BCA; /* Darkened for active states */
+    --periwinkle:#8A8DFB;
+    
+    /* Neutrals & Backgrounds */
+    --canvas:#F1EFEB; /* Warm Alabaster */
+    --surface:#FFFFFF; 
+    --sunken:#F2FAF5; /* Off-White Mint */
+    --line:#E5E1DA; 
+    --line-strong:#D2CEC7; 
+    --field:#A0A5B5;
+    
+    /* Text */
+    --ink:#1F2430; 
+    --ink-muted:#4F586A; 
+    --ink-subtle:#6B7385;
+    
+    /* Semantic */
+    --success:#1C6C55; 
+    --success-soft:#B8E2D8; /* Pale Mint */
+    --warning:#F5B63D; 
+    --warning-soft:#FFF4DB; 
+    --warning-ink:#7A5200;
+    --danger:#D13438; 
+    --danger-hover:#B52B2F; 
+    --danger-ink:#A6262A; 
+    --danger-soft:#FDECEC;
+    
+    /* Label Pairs */
+    --green-bg:#B8E2D8; --green-fg:#1C6C55;
+    --yellow-bg:#FFF1C2; --yellow-fg:#7A5200;
+    --orange-bg:#FFE3CC; --orange-fg:#8F4300;
+    --red-bg:#FDE0E0; --red-fg:#A6262A;
+    --purple-bg:#E8E9FF; --purple-fg:#4A4FB5;
+    --blue-bg:#CEDDF7; --blue-fg:#3F51B5;
+    --teal-bg:#D5F3F1; --teal-fg:#0B6B66;
+    --pink-bg:#FCE1EF; --pink-fg:#9C2A66;
+    
+    /* Shapes */
+    --r-sm:6px; --r-md:8px; --r-lg:12px; --r-full:9999px;
+    --shadow-overlay:0 8px 24px rgb(31 36 48 / 0.12);
+  }
+
+  /* ============ Base ============ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; }
+  html { background: var(--canvas); scroll-behavior: smooth; }
+  body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px; line-height: 20px; color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible { outline: 2px solid var(--primary-500); outline-offset: 2px; }
+  a { color: var(--primary-600); text-decoration: none; }
+  a:hover { color: var(--primary-700); text-decoration: underline; }
+  svg.i { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  svg.i.lg { width: 20px; height: 20px; }
+  svg.i.xl { width: 48px; height: 48px; stroke-width: 1.25; }
+
+  /* ============ Doc chrome ============ */
+  .topbar { height: 56px; background: var(--surface); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 16px; padding: 0 24px; position: sticky; top: 0; z-index: 10; }
+  .logo { width: 24px; height: 24px; border-radius: var(--r-md); background: var(--primary-500); color: #fff; font-weight: 600; font-size: 14px; display: grid; place-items: center; }
+  .brand { font-size: 16px; line-height: 24px; font-weight: 600; }
+  .topbar nav { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; }
+  .topbar nav a { color: var(--ink-muted); padding: 6px 10px; border-radius: var(--r-md); font-weight: 500; white-space: nowrap; transition: background-color .15s, color .15s; }
+  .topbar nav a:hover { background: var(--sunken); color: var(--ink); text-decoration: none; }
+  main { max-width: 1080px; margin: 0 auto; padding: 48px 24px; }
+  .hero { margin-bottom: 48px; }
+  .hero h1 { font-size: 30px; line-height: 36px; font-weight: 600; margin-bottom: 8px; }
+  .hero p { color: var(--ink-muted); max-width: 62ch; font-size: 16px; line-height: 24px; }
+  section { margin-bottom: 48px; scroll-margin-top: 80px; }
+  section > h2 { font-size: 20px; line-height: 28px; font-weight: 600; margin-bottom: 4px; }
+  section > .lead { color: var(--ink-muted); margin-bottom: 16px; max-width: 70ch; }
+  h3.sub { font-size: 16px; line-height: 24px; font-weight: 600; margin: 24px 0 8px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px; }
+  .panel + .panel { margin-top: 16px; }
+  .grid > .panel { margin-top: 0; }
+  .grid + .panel { margin-top: 16px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .row.gap-16 { gap: 16px; }
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  @media (max-width: 860px) { .g3, .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .g2, .g3, .g4 { grid-template-columns: 1fr; } main { padding: 32px 16px; } }
+  .caption { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+  .tag { font-size: 12px; line-height: 16px; color: var(--ink-muted); margin-bottom: 8px; display: block; font-weight: 500; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  code { background: var(--sunken); padding: 1px 6px; border-radius: var(--r-sm); color: var(--ink); }
+  .stage { background: var(--canvas); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px; }
+
+  /* ============ Swatches ============ */
+  .swatch { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--surface); }
+  .swatch .chip { height: 56px; border-bottom: 1px solid var(--line); }
+  .swatch .meta { padding: 8px 12px; }
+  .swatch .name { font-weight: 500; }
+  .swatch .use { font-size: 12px; line-height: 16px; color: var(--ink-muted); margin-top: 2px; }
+
+  /* ============ Type ============ */
+  .type-row { display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .type-row:last-child { border-bottom: 0; }
+  .type-row .spec { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+  .t-display { font-size: 30px; line-height: 36px; font-weight: 600; }
+  .t-h1 { font-size: 24px; line-height: 32px; font-weight: 600; }
+  .t-h2 { font-size: 20px; line-height: 28px; font-weight: 600; }
+  .t-h3 { font-size: 16px; line-height: 24px; font-weight: 600; }
+  .t-body { font-size: 14px; line-height: 20px; }
+  .t-strong { font-size: 14px; line-height: 20px; font-weight: 500; }
+  .t-muted { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+  .t-caption { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+  @media (max-width: 560px) { .type-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ============ Spacing / radius ============ */
+  .space-row { display: flex; align-items: center; gap: 16px; padding: 4px 0; }
+  .space-row .bar { height: 16px; background: var(--primary-200); border-radius: 2px; }
+  .space-row .lbl { width: 90px; font-size: 12px; color: var(--ink-muted); }
+  .radius-box { width: 100%; height: 64px; background: var(--primary-50); border: 1px solid var(--primary-200); display: grid; place-items: center; font-size: 12px; color: var(--primary-700); font-weight: 500; }
+
+  /* ============ Button ============ */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: var(--r-md); font: inherit; font-weight: 500; border: 1px solid transparent; cursor: pointer; transition: background-color .15s, color .15s, border-color .15s; white-space: nowrap; }
+  .btn:disabled { cursor: not-allowed; }
+  .btn.sm { height: 32px; padding: 0 12px; }
+  .btn.lg { height: 44px; padding: 0 20px; font-size: 16px; line-height: 24px; }
+  .btn.icon { width: 36px; padding: 0; }
+  .btn.icon.sm { width: 32px; }
+  .btn-primary { background: var(--primary-500); color: #fff; }
+  .btn-primary:hover { background: var(--primary-600); }
+  .btn-primary:active { background: var(--primary-700); }
+  .btn-primary:disabled { background: var(--sunken); color: var(--ink-subtle); }
+  .btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
+  .btn-secondary:hover { background: var(--sunken); }
+  .btn-secondary:active { background: var(--line); }
+  .btn-secondary:disabled { background: var(--sunken); color: var(--ink-subtle); border-color: var(--line); }
+  .btn-ghost { background: transparent; color: var(--ink-muted); }
+  .btn-ghost:hover { background: var(--sunken); color: var(--ink); }
+  .btn-ghost:active { background: var(--line); }
+  .btn-ghost:disabled { color: var(--ink-subtle); background: transparent; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { background: var(--danger-hover); }
+  .btn-danger:active { background: var(--danger-ink); }
+  .btn-danger:disabled { background: var(--sunken); color: var(--ink-subtle); }
+  .btn.is-hover.btn-primary { background: var(--primary-600); }
+  .btn.is-active.btn-primary { background: var(--primary-700); }
+  .btn.is-hover.btn-secondary { background: var(--sunken); }
+  .btn.is-active.btn-secondary { background: var(--line); }
+  .btn.is-hover.btn-ghost { background: var(--sunken); color: var(--ink); }
+  .btn.is-active.btn-ghost { background: var(--line); color: var(--ink); }
+  .btn.is-hover.btn-danger { background: var(--danger-hover); }
+  .btn.is-active.btn-danger { background: var(--danger-ink); }
+  .btn.is-focus { outline: 2px solid var(--primary-500); outline-offset: 2px; }
+  .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .state-table { display: grid; grid-template-columns: 100px repeat(5, minmax(0, 1fr)); gap: 12px 8px; align-items: center; }
+  .state-table .h { font-size: 12px; color: var(--ink-muted); font-weight: 500; }
+  @media (max-width: 760px) { .state-table { grid-template-columns: 80px repeat(5, auto); overflow-x: auto; } }
+
+  /* ============ Form ============ */
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-weight: 500; }
+  .input, .select, .textarea { width: 100%; height: 36px; padding: 0 12px; border-radius: var(--r-md); border: 1px solid var(--field); background: var(--surface); font: inherit; color: var(--ink); transition: border-color .15s; }
+  .textarea { height: auto; min-height: 80px; padding: 8px 12px; resize: vertical; }
+  .input::placeholder, .textarea::placeholder { color: var(--ink-subtle); }
+  .input:hover, .select:hover, .textarea:hover { border-color: var(--ink-subtle); }
+  .input:focus-visible, .select:focus-visible, .textarea:focus-visible { outline: 2px solid var(--primary-500); outline-offset: 0; border-color: var(--primary-500); }
+  .input:disabled { background: var(--sunken); color: var(--ink-subtle); cursor: not-allowed; border-color: var(--line); }
+  .input.error { border-color: var(--danger); }
+  .input.error:focus-visible { outline-color: var(--danger); }
+  .help { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+  .err { font-size: 12px; line-height: 16px; color: var(--danger-ink); display: flex; gap: 4px; align-items: center; }
+  .inline-edit { width: 100%; height: 36px; padding: 0 8px; border-radius: var(--r-md); border: 1px solid transparent; background: transparent; font: inherit; font-size: 16px; line-height: 24px; font-weight: 600; color: var(--ink); }
+  .inline-edit:hover { background: var(--sunken); }
+  .inline-edit:focus-visible { background: var(--surface); border-color: var(--primary-500); outline: none; }
+  .check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+  .check > input { appearance: none; width: 16px; height: 16px; border: 1px solid var(--field); border-radius: var(--r-sm); background: var(--surface); display: grid; place-items: center; margin: 0; cursor: pointer; transition: background-color .15s, border-color .15s; }
+  .check > input[type=radio] { border-radius: 50%; }
+  .check > input:hover { border-color: var(--ink-subtle); }
+  .check > input:checked { background: var(--primary-500); border-color: var(--primary-500); }
+  .check > input[type=checkbox]:checked::after { content: ""; width: 8px; height: 4px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+  .check > input[type=radio]:checked::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+  .check > input:disabled { background: var(--sunken); border-color: var(--line); cursor: not-allowed; }
+  .check > input:disabled + span { color: var(--ink-subtle); }
+  .switch { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+  .switch input { appearance: none; position: absolute; inset: 0; margin: 0; border-radius: var(--r-full); background: var(--field); cursor: pointer; transition: background-color .15s; }
+  .switch input:checked { background: var(--primary-500); }
+  .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .15s; pointer-events: none; }
+  .switch:has(input:checked)::after { transform: translateX(16px); }
+
+  /* ============ Badges / labels ============ */
+  .label { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: var(--r-sm); font-size: 12px; font-weight: 500; }
+  .l-green { background: var(--green-bg); color: var(--green-fg); }
+  .l-yellow { background: var(--yellow-bg); color: var(--yellow-fg); }
+  .l-orange { background: var(--orange-bg); color: var(--orange-fg); }
+  .l-red { background: var(--red-bg); color: var(--red-fg); }
+  .l-purple { background: var(--purple-bg); color: var(--purple-fg); }
+  .l-blue { background: var(--blue-bg); color: var(--blue-fg); }
+  .l-teal { background: var(--teal-bg); color: var(--teal-fg); }
+  .l-pink { background: var(--pink-bg); color: var(--pink-fg); }
+  .badge { display: inline-flex; align-items: center; gap: 6px; height: 20px; padding: 0 10px; border-radius: var(--r-full); font-size: 12px; font-weight: 500; }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .b-neutral { background: var(--sunken); color: var(--ink-muted); }
+  .b-info { background: var(--primary-100); color: var(--primary-700); }
+  .b-success { background: var(--success-soft); color: var(--success); }
+  .b-warning { background: var(--warning-soft); color: var(--warning-ink); }
+  .b-danger { background: var(--danger-soft); color: var(--danger-ink); }
+
+  /* ============ Avatars ============ */
+  .avatar { display: inline-grid; place-items: center; border-radius: 50%; font-weight: 500; flex-shrink: 0; }
+  .av-24 { width: 24px; height: 24px; font-size: 12px; }
+  .av-32 { width: 32px; height: 32px; font-size: 12px; }
+  .av-40 { width: 40px; height: 40px; font-size: 14px; }
+  .stack { display: inline-flex; }
+  .stack .avatar { box-shadow: 0 0 0 2px var(--surface); }
+  .stack .avatar + .avatar { margin-left: -6px; }
+  .stack .av-24 + .av-24 { margin-left: -4px; }
+  .stage .stack .avatar { box-shadow: 0 0 0 2px var(--surface); }
+
+  /* ============ Task card ============ */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: border-color .15s, background-color .15s; text-align: left; font: inherit; color: inherit; width: 100%; }
+  .card:hover { border-color: var(--line-strong); }
+  .card.selected { border-color: var(--primary-500); background: var(--primary-50); }
+  .card.dragging { transform: rotate(2deg); box-shadow: var(--shadow-overlay); border-color: var(--primary-200); }
+  .card .labels { display: flex; flex-wrap: wrap; gap: 4px; }
+  .card .title { font-weight: 500; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card .meta { display: flex; align-items: center; gap: 12px; font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+  .card .meta .it { display: inline-flex; align-items: center; gap: 4px; }
+  .card .meta .stack { margin-left: auto; }
+  .due { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 6px; border-radius: var(--r-sm); font-size: 12px; font-weight: 500; background: var(--sunken); color: var(--ink-muted); }
+  .due.soon { background: var(--warning-soft); color: var(--warning-ink); }
+  .due.over { background: var(--danger-soft); color: var(--danger-ink); }
+  .due.done { background: var(--success-soft); color: var(--success); }
+  .placeholder-card { height: 64px; border-radius: var(--r-md); border: 2px dashed var(--primary-200); background: var(--primary-50); }
+
+  /* ============ Board ============ */
+  .board { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; align-items: flex-start; }
+  .column { width: 288px; flex-shrink: 0; background: var(--sunken); border-radius: var(--r-lg); padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+  .col-head { display: flex; align-items: center; gap: 8px; padding: 4px 8px; }
+  .col-head h4 { font-size: 16px; line-height: 24px; font-weight: 600; }
+  .count { font-size: 12px; line-height: 16px; color: var(--ink-muted); background: var(--surface); border-radius: var(--r-full); padding: 2px 8px; font-weight: 500; }
+  .col-head .btn { margin-left: auto; }
+  .col-body { display: flex; flex-direction: column; gap: 8px; }
+  .col-foot > .btn { width: 100%; justify-content: flex-start; }
+  .column.drag-over { outline: 2px dashed var(--primary-200); }
+
+  /* ============ App nav ============ */
+  .appnav { height: 56px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; align-items: center; gap: 12px; padding: 0 16px; overflow: hidden; }
+  .appnav .spacer { flex: 1; }
+  .search { position: relative; width: 220px; }
+  .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-subtle); }
+  .search .input { height: 32px; padding-left: 32px; }
+  @media (max-width: 700px) { .search { display: none; } }
+
+  /* ============ Overlays ============ */
+  .modal-stage { background: color-mix(in srgb, var(--ink) 40%, transparent); border-radius: var(--r-lg); padding: 32px 16px; display: grid; place-items: center; }
+  .modal { width: 100%; max-width: 560px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .modal-head { display: flex; align-items: flex-start; gap: 8px; }
+  .modal-head h4 { font-size: 20px; line-height: 28px; font-weight: 600; flex: 1; }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 8px; }
+  .menu { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); padding: 4px; width: 208px; }
+  .menu .item { height: 32px; padding: 0 8px; border-radius: var(--r-md); display: flex; align-items: center; gap: 8px; color: var(--ink); cursor: pointer; transition: background-color .15s; }
+  .menu .item:hover { background: var(--sunken); }
+  .menu .item.danger { color: var(--danger-ink); }
+  .menu .item.danger:hover { background: var(--danger-soft); }
+  .menu .item svg { color: var(--ink-muted); }
+  .menu .item.danger svg { color: var(--danger-ink); }
+  .menu hr { border: 0; height: 1px; background: var(--line); margin: 4px 0; }
+  .toast { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); padding: 12px; display: flex; gap: 12px; align-items: flex-start; width: 320px; max-width: 100%; }
+  .toast .t { font-weight: 500; }
+  .toast .d { color: var(--ink-muted); }
+  .toast .x { margin-left: auto; }
+  .toast .ic-success { color: var(--success); } .toast .ic-danger { color: var(--danger); } .toast .ic-info { color: var(--primary-500); }
+  .tip { display: inline-block; background: var(--ink); color: #fff; font-size: 12px; line-height: 16px; border-radius: var(--r-md); padding: 4px 8px; }
+  .banner { display: flex; gap: 8px; align-items: flex-start; padding: 8px 12px; border-radius: var(--r-md); }
+  .bn-info { background: var(--primary-50); color: var(--primary-700); }
+  .bn-success { background: var(--success-soft); color: var(--success); }
+  .bn-warning { background: var(--warning-soft); color: var(--warning-ink); }
+  .bn-danger { background: var(--danger-soft); color: var(--danger-ink); }
+  .banner svg { margin-top: 2px; }
+
+  /* ============ Tabs / progress / empty ============ */
+  .tabs { display: flex; gap: 16px; border-bottom: 1px solid var(--line); }
+  .tab { height: 40px; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; font: inherit; font-weight: 500; color: var(--ink-muted); cursor: pointer; padding: 0 2px; transition: color .15s; }
+  .tab:hover { color: var(--ink); }
+  .tab[aria-selected=true] { color: var(--ink); border-bottom-color: var(--primary-500); }
+  .progress { display: flex; align-items: center; gap: 12px; }
+  .progress .track { flex: 1; height: 8px; background: var(--sunken); border-radius: var(--r-full); overflow: hidden; }
+  .progress .fill { height: 100%; background: var(--primary-500); border-radius: var(--r-full); }
+  .progress .fill.done { background: var(--success); }
+  .progress .num { font-size: 12px; line-height: 16px; color: var(--ink-muted); width: 36px; text-align: right; }
+  .empty { text-align: center; padding: 48px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .empty > svg { color: var(--ink-subtle); margin-bottom: 4px; }
+  .skel { background: var(--sunken); border-radius: var(--r-md); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .5; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .card.dragging { transform: none; } }
+
+  /* ============ Do / Don't ============ */
+  .dd { border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface); overflow: hidden; }
+  .dd .bar { padding: 8px 12px; font-weight: 600; font-size: 12px; line-height: 16px; display: flex; align-items: center; gap: 6px; }
+  .dd.do .bar { background: var(--success-soft); color: var(--success); }
+  .dd.dont .bar { background: var(--danger-soft); color: var(--danger-ink); }
+  .dd .body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .fake-shadow { box-shadow: 0 6px 16px rgb(0 0 0 / .18); }
+  .fake-grad { background: linear-gradient(135deg, #7c5cff, #3d6bf2); color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+    <symbol id="check-sq" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="msg" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></symbol>
+    <symbol id="clip" viewBox="0 0 24 24"><path d="m21 11-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 7"/></symbol>
+    <symbol id="edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="move" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="warn" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></symbol>
+    <symbol id="err" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></symbol>
+    <symbol id="board" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 7v7M15 7v4"/></symbol>
+    <symbol id="chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="logo">S</div>
+  <span class="brand">Sevy design system</span>
+  <nav aria-label="Sections">
+    <a href="#color">Color</a>
+    <a href="#type">Type</a>
+    <a href="#space">Space</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#forms">Forms</a>
+    <a href="#badges">Labels</a>
+    <a href="#cards">Cards</a>
+    <a href="#board">Board</a>
+    <a href="#overlays">Overlays</a>
+    <a href="#misc">More</a>
+    <a href="#rules">Do / Don't</a>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Simple, flat, friendly.</h1>
+    <p>Visual reference for the Sevy UI. Surfaces are separated by borders and tone, not shadows. The Sevy palette uses blues and purples for actions, soft alabaster and mint for backgrounds, and pastel colors for labels.</p>
+  </div>
+
+  <!-- ================= COLOR ================= -->
+  <section id="color">
+    <h2>Color</h2>
+    <p class="lead">Neutrals carry the interface. Cornflower blue marks the one thing to do next. Soft pastel pairs are reserved for card labels and status.</p>
+
+    <h3 class="sub" style="margin-top:0">Primary & Accents</h3>
+    <div class="grid g3" style="grid-template-columns: repeat(6, minmax(0,1fr));">
+      <div class="swatch"><div class="chip" style="background:#F4F6FF"></div><div class="meta"><div class="name">primary-50</div><div class="use mono">#F4F6FF</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#CEDDF7"></div><div class="meta"><div class="name">primary-100</div><div class="use mono">#CEDDF7</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#97B3F8"></div><div class="meta"><div class="name">primary-200</div><div class="use mono">#97B3F8</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#6D7BEC"></div><div class="meta"><div class="name">primary-500</div><div class="use mono">#6D7BEC</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#5876EC"></div><div class="meta"><div class="name">primary-600</div><div class="use mono">#5876EC</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#8A8DFB"></div><div class="meta"><div class="name">periwinkle</div><div class="use mono">#8A8DFB</div></div></div>
+    </div>
+
+    <h3 class="sub">Neutrals & Backgrounds</h3>
+    <div class="grid g4">
+      <div class="swatch"><div class="chip" style="background:#F1EFEB"></div><div class="meta"><div class="name">canvas</div><div class="use">Warm Alabaster · #F1EFEB</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><div class="name">surface</div><div class="use">Cards, inputs, nav · #FFFFFF</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F2FAF5"></div><div class="meta"><div class="name">sunken</div><div class="use">Off-White Mint · #F2FAF5</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#E5E1DA"></div><div class="meta"><div class="name">line</div><div class="use">Borders, dividers · #E5E1DA</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#D2CEC7"></div><div class="meta"><div class="name">line-strong</div><div class="use">Secondary button border · #D2CEC7</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#A0A5B5"></div><div class="meta"><div class="name">field</div><div class="use">Form control borders · #A0A5B5</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#1F2430"></div><div class="meta"><div class="name">ink</div><div class="use">Primary text · #1F2430</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#4F586A"></div><div class="meta"><div class="name">ink-muted</div><div class="use">Secondary text · #4F586A</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#6B7385"></div><div class="meta"><div class="name">ink-subtle</div><div class="use">Placeholder, disabled · #6B7385</div></div></div>
+    </div>
+
+    <h3 class="sub">Semantic</h3>
+    <div class="grid g4">
+      <div class="swatch"><div class="chip" style="background:#B8E2D8"></div><div class="meta"><div class="name">success-soft</div><div class="use">Pale Mint · #B8E2D8</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#1C6C55"></div><div class="meta"><div class="name">success</div><div class="use">#1C6C55</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F5B63D"></div><div class="meta"><div class="name">warning</div><div class="use">#F5B63D</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFF4DB"></div><div class="meta"><div class="name">warning-soft</div><div class="use">#FFF4DB</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#D13438"></div><div class="meta"><div class="name">danger</div><div class="use">#D13438</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FDECEC"></div><div class="meta"><div class="name">danger-soft</div><div class="use">#FDECEC</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#7BAAD6"></div><div class="meta"><div class="name">sky</div><div class="use">Muted Sky Blue · #7BAAD6</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#CEDDF7"></div><div class="meta"><div class="name">ice</div><div class="use">Pale Ice Blue · #CEDDF7</div></div></div>
+    </div>
+  </section>
+
+  <!-- ================= TYPE ================= -->
+  <section id="type">
+    <h2>Typography</h2>
+    <p class="lead">Inter, weights 400 / 500 / 600. Body is 14px. Sentence case everywhere.</p>
+    <div class="panel">
+      <div class="type-row"><div class="spec">Display · 30/36 · 600<br><code>text-2xl font-semibold</code></div><div class="t-display">Plan your work, calmly</div></div>
+      <div class="type-row"><div class="spec">H1 · 24/32 · 600<br><code>text-xl font-semibold</code></div><div class="t-h1">Website redesign</div></div>
+      <div class="type-row"><div class="spec">H2 · 20/28 · 600<br><code>text-lg font-semibold</code></div><div class="t-h2">Card details</div></div>
+      <div class="type-row"><div class="spec">H3 · 16/24 · 600<br><code>text-base font-semibold</code></div><div class="t-h3">In progress</div></div>
+      <div class="type-row"><div class="spec">Body · 14/20 · 400<br><code>text-sm</code></div><div class="t-body">Draft the landing page copy and share it with the team for feedback.</div></div>
+      <div class="type-row"><div class="spec">Strong / label · 14/20 · 500<br><code>text-sm font-medium</code></div><div class="t-strong">Write onboarding checklist</div></div>
+      <div class="type-row"><div class="spec">Secondary · 14/20 · 400<br><code>text-sm text-ink-muted</code></div><div class="t-muted">Add a description so teammates know what this card is about.</div></div>
+      <div class="type-row"><div class="spec">Caption · 12/16 · 400<br><code>text-xs text-ink-muted</code></div><div class="t-caption">Updated 2 hours ago · 3 comments</div></div>
+      <div class="type-row"><div class="spec">Link<br><code>text-primary-600</code></div><div class="t-body"><a href="#type">View all activity</a></div></div>
+    </div>
+  </section>
+
+  <!-- ================= SPACE ================= -->
+  <section id="space">
+    <h2>Spacing, radius, elevation</h2>
+    <p class="lead">4px grid. 8px is the default corner. Only overlays get a shadow.</p>
+    <div class="grid g2">
+      <div class="panel">
+        <span class="tag">Spacing scale</span>
+        <div class="space-row"><span class="lbl">1 · 4px</span><div class="bar" style="width:4px"></div></div>
+        <div class="space-row"><span class="lbl">2 · 8px</span><div class="bar" style="width:8px"></div></div>
+        <div class="space-row"><span class="lbl">3 · 12px</span><div class="bar" style="width:12px"></div></div>
+        <div class="space-row"><span class="lbl">4 · 16px</span><div class="bar" style="width:16px"></div></div>
+        <div class="space-row"><span class="lbl">6 · 24px</span><div class="bar" style="width:24px"></div></div>
+        <div class="space-row"><span class="lbl">8 · 32px</span><div class="bar" style="width:32px"></div></div>
+        <div class="space-row"><span class="lbl">12 · 48px</span><div class="bar" style="width:48px"></div></div>
+      </div>
+      <div class="panel">
+        <span class="tag">Radius</span>
+        <div class="grid g2" style="gap:12px">
+          <div><div class="radius-box" style="border-radius:6px">sm · 6px</div><div class="caption" style="margin-top:4px">Chips, labels</div></div>
+          <div><div class="radius-box" style="border-radius:8px">md · 8px</div><div class="caption" style="margin-top:4px">Buttons, inputs, cards</div></div>
+          <div><div class="radius-box" style="border-radius:12px">lg · 12px</div><div class="caption" style="margin-top:4px">Columns, modals</div></div>
+          <div><div class="radius-box" style="border-radius:9999px">full</div><div class="caption" style="margin-top:4px">Avatars, pills</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <span class="tag">Elevation</span>
+      <div class="stage">
+        <div class="grid g4" style="align-items:stretch">
+          <div style="background:var(--canvas);border:1px dashed var(--line-strong);border-radius:8px;padding:16px"><b>Base</b><div class="caption">canvas</div></div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px"><b>Raised</b><div class="caption">surface + line border</div></div>
+          <div style="background:var(--sunken);border-radius:8px;padding:16px"><b>Inset</b><div class="caption">sunken</div></div>
+          <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow-overlay)"><b>Overlay</b><div class="caption">+ shadow-overlay</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BUTTONS ================= -->
+  <section id="buttons">
+    <h2>Buttons</h2>
+    <p class="lead">One primary per region. Verbs for labels. Icon-only buttons need an <code>aria-label</code>.</p>
+
+    <div class="panel">
+      <span class="tag">Variants</span>
+      <div class="row gap-16">
+        <button class="btn btn-primary">Add card</button>
+        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-ghost">Learn more</button>
+        <button class="btn btn-danger">Delete board</button>
+      </div>
+
+      <span class="tag" style="margin-top:24px">Sizes</span>
+      <div class="row gap-16">
+        <button class="btn btn-primary sm">Small · 32</button>
+        <button class="btn btn-primary">Medium · 36</button>
+        <button class="btn btn-primary lg">Large · 44</button>
+        <button class="btn btn-secondary icon" aria-label="Add"><svg class="i"><use href="#plus"/></svg></button>
+        <button class="btn btn-ghost icon sm" aria-label="More options"><svg class="i"><use href="#more"/></svg></button>
+      </div>
+
+      <span class="tag" style="margin-top:24px">With icon and loading</span>
+      <div class="row gap-16">
+        <button class="btn btn-primary"><svg class="i"><use href="#plus"/></svg>Create board</button>
+        <button class="btn btn-secondary"><svg class="i"><use href="#cal"/></svg>Set due date</button>
+        <button class="btn btn-primary" aria-busy="true" disabled style="background:var(--primary-500);color:#fff;opacity:.85"><span class="spinner"></span>Saving…</button>
+      </div>
+
+      <span class="tag" style="margin-top:24px">States (hover and active are forced for display)</span>
+      <div class="state-table">
+        <div></div><div class="h">Default</div><div class="h">Hover</div><div class="h">Active</div><div class="h">Focus</div><div class="h">Disabled</div>
+
+        <div class="h">Primary</div>
+        <div><button class="btn btn-primary">Button</button></div>
+        <div><button class="btn btn-primary is-hover">Button</button></div>
+        <div><button class="btn btn-primary is-active">Button</button></div>
+        <div><button class="btn btn-primary is-focus">Button</button></div>
+        <div><button class="btn btn-primary" disabled>Button</button></div>
+
+        <div class="h">Secondary</div>
+        <div><button class="btn btn-secondary">Button</button></div>
+        <div><button class="btn btn-secondary is-hover">Button</button></div>
+        <div><button class="btn btn-secondary is-active">Button</button></div>
+        <div><button class="btn btn-secondary is-focus">Button</button></div>
+        <div><button class="btn btn-secondary" disabled>Button</button></div>
+
+        <div class="h">Ghost</div>
+        <div><button class="btn btn-ghost">Button</button></div>
+        <div><button class="btn btn-ghost is-hover">Button</button></div>
+        <div><button class="btn btn-ghost is-active">Button</button></div>
+        <div><button class="btn btn-ghost is-focus">Button</button></div>
+        <div><button class="btn btn-ghost" disabled>Button</button></div>
+
+        <div class="h">Danger</div>
+        <div><button class="btn btn-danger">Button</button></div>
+        <div><button class="btn btn-danger is-hover">Button</button></div>
+        <div><button class="btn btn-danger is-active">Button</button></div>
+        <div><button class="btn btn-danger is-focus">Button</button></div>
+        <div><button class="btn btn-danger" disabled>Button</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FORMS ================= -->
+  <section id="forms">
+    <h2>Form controls</h2>
+    <p class="lead">Labels sit above fields. Focus is a 2px blue outline. Errors add text and an icon, never color alone.</p>
+    <div class="panel">
+      <div class="grid g2" style="gap:24px">
+        <div class="field"><label for="f1">Board name</label><input id="f1" class="input" placeholder="e.g. Website redesign"><span class="help">You can change this later.</span></div>
+        <div class="field"><label for="f2">Email</label><input id="f2" class="input error" value="john@example" aria-invalid="true"><span class="err"><svg class="i"><use href="#err"/></svg>Enter a valid email address.</span></div>
+        <div class="field"><label for="f3">Workspace</label><input id="f3" class="input" value="Personal" disabled></div>
+        <div class="field"><label for="f4">Assignee</label>
+          <select id="f4" class="select"><option>Unassigned</option><option>Alex Rivera</option><option>Mina Sato</option></select></div>
+        <div class="field" style="grid-column: 1 / -1"><label for="f5">Description</label><textarea id="f5" class="textarea" placeholder="Add a more detailed description…"></textarea></div>
+      </div>
+
+      <div class="grid g3" style="margin-top:24px; gap:24px">
+        <div>
+          <span class="tag">Checkbox</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label class="check"><input type="checkbox" checked><span>Write release notes</span></label>
+            <label class="check"><input type="checkbox"><span>Update screenshots</span></label>
+            <label class="check"><input type="checkbox" disabled><span>Archived item</span></label>
+          </div>
+        </div>
+        <div>
+          <span class="tag">Radio</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label class="check"><input type="radio" name="vis" checked><span>Private</span></label>
+            <label class="check"><input type="radio" name="vis"><span>Workspace</span></label>
+            <label class="check"><input type="radio" name="vis"><span>Public</span></label>
+          </div>
+        </div>
+        <div>
+          <span class="tag">Switch</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label class="check"><span class="switch"><input type="checkbox" checked></span><span>Email notifications</span></label>
+            <label class="check"><span class="switch"><input type="checkbox"></span><span>Show card covers</span></label>
+          </div>
+        </div>
+      </div>
+
+      <span class="tag" style="margin-top:24px">Inline edit (looks like text until hovered or focused)</span>
+      <div style="max-width:320px"><input class="inline-edit" value="In progress" aria-label="List title"></div>
+    </div>
+  </section>
+
+  <!-- ================= BADGES ================= -->
+  <section id="badges">
+    <h2>Labels, badges, avatars</h2>
+    <p class="lead">Card labels are soft pastels with dark text. Status badges are pills with a dot or text.</p>
+    <div class="panel">
+      <span class="tag">Card labels</span>
+      <div class="row">
+        <span class="label l-green">Design</span>
+        <span class="label l-yellow">Research</span>
+        <span class="label l-orange">Backend</span>
+        <span class="label l-red">Urgent</span>
+        <span class="label l-purple">Frontend</span>
+        <span class="label l-blue">Planning</span>
+        <span class="label l-teal">Docs</span>
+        <span class="label l-pink">Bug</span>
+      </div>
+      <span class="tag" style="margin-top:24px">Status badges</span>
+      <div class="row">
+        <span class="badge b-neutral"><span class="dot"></span>Not started</span>
+        <span class="badge b-info"><span class="dot"></span>In progress</span>
+        <span class="badge b-success"><span class="dot"></span>Done</span>
+        <span class="badge b-warning"><span class="dot"></span>Due soon</span>
+        <span class="badge b-danger"><span class="dot"></span>Overdue</span>
+      </div>
+      <span class="tag" style="margin-top:24px">Avatars (24 / 32 / 40) and stack</span>
+      <div class="row gap-16">
+        <span class="avatar av-24 l-blue">JA</span>
+        <span class="avatar av-32 l-green">MS</span>
+        <span class="avatar av-40 l-purple">AR</span>
+        <span class="stack">
+          <span class="avatar av-32 l-blue">JA</span>
+          <span class="avatar av-32 l-green">MS</span>
+          <span class="avatar av-32 l-orange">AR</span>
+          <span class="avatar av-32" style="background:var(--sunken);color:var(--ink-muted)">+3</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CARDS ================= -->
+  <section id="cards">
+    <h2>Task cards</h2>
+    <p class="lead">White card, 1px border, 8px corners. Hover darkens the border; selected tints the card blue.</p>
+    <div class="stage">
+      <div class="grid g3">
+        <div>
+          <span class="tag">Simple</span>
+          <button class="card"><span class="title">Write release notes</span></button>
+        </div>
+        <div>
+          <span class="tag">With labels and meta</span>
+          <button class="card">
+            <span class="labels"><span class="label l-purple">Frontend</span><span class="label l-red">Urgent</span></span>
+            <span class="title">Build the board drag-and-drop interaction</span>
+            <span class="meta">
+              <span class="due soon"><svg class="i"><use href="#cal"/></svg>Nov 19</span>
+              <span class="it"><svg class="i"><use href="#check-sq"/></svg>2/5</span>
+              <span class="it"><svg class="i"><use href="#msg"/></svg>3</span>
+              <span class="stack"><span class="avatar av-24 l-blue">JA</span><span class="avatar av-24 l-green">MS</span></span>
+            </span>
+          </button>
+        </div>
+        <div>
+          <span class="tag">Selected</span>
+          <button class="card selected">
+            <span class="labels"><span class="label l-teal">Docs</span></span>
+            <span class="title">Document the REST API endpoints for boards, lists and cards</span>
+            <span class="meta"><span class="due"><svg class="i"><use href="#cal"/></svg>Nov 28</span><span class="it"><svg class="i"><use href="#clip"/></svg>1</span></span>
+          </button>
+        </div>
+        <div>
+          <span class="tag">Overdue</span>
+          <button class="card">
+            <span class="title">Fix login redirect loop</span>
+            <span class="meta"><span class="due over"><svg class="i"><use href="#cal"/></svg>Nov 12 · Overdue</span><span class="stack"><span class="avatar av-24 l-orange">AR</span></span></span>
+          </button>
+        </div>
+        <div>
+          <span class="tag">Completed</span>
+          <button class="card">
+            <span class="title">Set up MongoDB indexes</span>
+            <span class="meta"><span class="due done"><svg class="i"><use href="#ok"/></svg>Done Nov 10</span></span>
+          </button>
+        </div>
+        <div>
+          <span class="tag">Dragging (only here: tilt + shadow)</span>
+          <button class="card dragging">
+            <span class="labels"><span class="label l-green">Design</span></span>
+            <span class="title">Design empty states</span>
+          </button>
+        </div>
+      </div>
+      <span class="tag" style="margin-top:24px">Drop placeholder</span>
+      <div class="placeholder-card" style="max-width:288px"></div>
+    </div>
+  </section>
+
+  <!-- ================= BOARD ================= -->
+  <section id="board">
+    <h2>Board layout</h2>
+    <p class="lead">Navbar 56px, columns 288px, 16px gaps. The board scrolls horizontally, the page does not.</p>
+
+    <span class="tag">Navbar</span>
+    <div class="appnav" style="margin-bottom:16px">
+      <div class="logo">S</div><span class="brand">Sevy</span>
+      <button class="btn btn-ghost sm"><svg class="i"><use href="#board"/></svg>Boards<svg class="i"><use href="#chev"/></svg></button>
+      <div class="spacer"></div>
+      <div class="search"><svg class="i"><use href="#search"/></svg><input class="input" placeholder="Search cards" aria-label="Search cards"></div>
+      <button class="btn btn-primary sm"><svg class="i"><use href="#plus"/></svg>Create</button>
+      <span class="avatar av-32 l-blue">JA</span>
+    </div>
+
+    <div class="stage">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <h3 class="t-h1">Website redesign</h3>
+        <span class="badge b-info"><span class="dot"></span>Sprint 4</span>
+        <span class="stack" style="margin-left:auto"><span class="avatar av-32 l-blue">JA</span><span class="avatar av-32 l-green">MS</span><span class="avatar av-32 l-orange">AR</span></span>
+        <button class="btn btn-secondary sm">Share</button>
+      </div>
+      <div class="board">
+        <div class="column">
+          <div class="col-head"><h4>To do</h4><span class="count">3</span><button class="btn btn-ghost icon sm" aria-label="List options"><svg class="i"><use href="#more"/></svg></button></div>
+          <div class="col-body">
+            <button class="card"><span class="labels"><span class="label l-blue">Planning</span></span><span class="title">Define sprint goals with the team</span><span class="meta"><span class="due"><svg class="i"><use href="#cal"/></svg>Nov 22</span></span></button>
+            <button class="card"><span class="title">Audit current navigation structure</span><span class="meta"><span class="it"><svg class="i"><use href="#msg"/></svg>2</span><span class="stack"><span class="avatar av-24 l-green">MS</span></span></span></button>
+            <button class="card"><span class="labels"><span class="label l-yellow">Research</span></span><span class="title">Interview five users about their daily workflow</span></button>
+          </div>
+          <div class="col-foot"><button class="btn btn-ghost sm"><svg class="i"><use href="#plus"/></svg>Add a card</button></div>
+        </div>
+
+        <div class="column drag-over">
+          <div class="col-head"><h4>In progress</h4><span class="count">2</span><button class="btn btn-ghost icon sm" aria-label="List options"><svg class="i"><use href="#more"/></svg></button></div>
+          <div class="col-body">
+            <button class="card"><span class="labels"><span class="label l-purple">Frontend</span><span class="label l-red">Urgent</span></span><span class="title">Build drag-and-drop for cards</span><span class="meta"><span class="due soon"><svg class="i"><use href="#cal"/></svg>Nov 19</span><span class="it"><svg class="i"><use href="#check-sq"/></svg>2/5</span><span class="stack"><span class="avatar av-24 l-blue">JA</span></span></span></button>
+            <div class="placeholder-card"></div>
+            <button class="card"><span class="labels"><span class="label l-orange">Backend</span></span><span class="title">Add pagination to the activity feed</span><span class="meta"><span class="due over"><svg class="i"><use href="#cal"/></svg>Nov 15</span></span></button>
+          </div>
+          <div class="col-foot"><button class="btn btn-ghost sm"><svg class="i"><use href="#plus"/></svg>Add a card</button></div>
+        </div>
+
+        <div class="column">
+          <div class="col-head"><h4>Done</h4><span class="count">2</span><button class="btn btn-ghost icon sm" aria-label="List options"><svg class="i"><use href="#more"/></svg></button></div>
+          <div class="col-body">
+            <button class="card"><span class="labels"><span class="label l-green">Design</span></span><span class="title">Create the Sevy design system</span><span class="meta"><span class="due done"><svg class="i"><use href="#ok"/></svg>Nov 18</span></span></button>
+            <button class="card"><span class="title">Set up Express API and MongoDB models</span><span class="meta"><span class="due done"><svg class="i"><use href="#ok"/></svg>Nov 10</span><span class="stack"><span class="avatar av-24 l-blue">JA</span></span></span></button>
+          </div>
+          <div class="col-foot">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <textarea class="textarea" style="min-height:64px" placeholder="Enter a title for this card…"></textarea>
+              <div class="row"><button class="btn btn-primary sm">Add card</button><button class="btn btn-ghost sm">Cancel</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= OVERLAYS ================= -->
+  <section id="overlays">
+    <h2>Overlays and feedback</h2>
+    <p class="lead">Modals, menus, and toasts float above the page, so they are the only elements with a shadow.</p>
+
+    <span class="tag">Modal (overlay is a solid 40% ink tint, no blur)</span>
+    <div class="modal-stage">
+      <div class="modal" role="dialog" aria-label="Delete board">
+        <div class="modal-head">
+          <h4>Delete “Website redesign”?</h4>
+          <button class="btn btn-ghost icon sm" aria-label="Close"><svg class="i"><use href="#x"/></svg></button>
+        </div>
+        <p class="t-muted">This will permanently remove the board, its 7 lists and 24 cards. This can’t be undone.</p>
+        <div class="field"><label for="m1">Type the board name to confirm</label><input id="m1" class="input" placeholder="Website redesign"></div>
+        <div class="modal-foot"><button class="btn btn-secondary">Cancel</button><button class="btn btn-danger">Delete board</button></div>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:24px">
+      <div>
+        <span class="tag">Dropdown menu</span>
+        <div class="stage" style="display:flex;justify-content:center">
+          <div class="menu" role="menu">
+            <div class="item" role="menuitem"><svg class="i"><use href="#edit"/></svg>Edit card</div>
+            <div class="item" role="menuitem"><svg class="i"><use href="#copy"/></svg>Duplicate</div>
+            <div class="item" role="menuitem"><svg class="i"><use href="#move"/></svg>Move to…</div>
+            <hr>
+            <div class="item danger" role="menuitem"><svg class="i"><use href="#trash"/></svg>Delete card</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="tag">Toasts</span>
+        <div class="stage" style="display:flex;flex-direction:column;gap:8px;align-items:center">
+          <div class="toast"><svg class="i lg ic-success"><use href="#ok"/></svg><div><div class="t">Card moved</div><div class="d">Moved to “In progress”.</div></div><button class="btn btn-ghost icon sm x" aria-label="Dismiss"><svg class="i"><use href="#x"/></svg></button></div>
+          <div class="toast"><svg class="i lg ic-danger"><use href="#err"/></svg><div><div class="t">Couldn’t save changes</div><div class="d">Check your connection and try again.</div></div><button class="btn btn-ghost icon sm x" aria-label="Dismiss"><svg class="i"><use href="#x"/></svg></button></div>
+          <div class="toast"><svg class="i lg ic-info"><use href="#info"/></svg><div><div class="t">Sync paused</div><div class="d">We’ll resume when you’re back online.</div></div><button class="btn btn-ghost icon sm x" aria-label="Dismiss"><svg class="i"><use href="#x"/></svg></button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:24px">
+      <span class="tag">Inline banners</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="banner bn-info"><svg class="i"><use href="#info"/></svg><span>You’re viewing this board in read-only mode.</span></div>
+        <div class="banner bn-success"><svg class="i"><use href="#ok"/></svg><span>Your changes were saved.</span></div>
+        <div class="banner bn-warning"><svg class="i"><use href="#warn"/></svg><span>3 cards are due within the next 24 hours.</span></div>
+        <div class="banner bn-danger"><svg class="i"><use href="#err"/></svg><span>We couldn’t load the activity feed. Try refreshing the page.</span></div>
+      </div>
+      <span class="tag" style="margin-top:24px">Tooltip</span>
+      <span class="tip">Add a card</span>
+    </div>
+  </section>
+
+  <!-- ================= MISC ================= -->
+  <section id="misc">
+    <h2>Tabs, progress, empty and loading states</h2>
+    <div class="grid g2">
+      <div class="panel">
+        <span class="tag">Tabs</span>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" aria-selected="true">Details</button>
+          <button class="tab" role="tab" aria-selected="false">Activity</button>
+          <button class="tab" role="tab" aria-selected="false">Attachments</button>
+        </div>
+        <span class="tag" style="margin-top:24px">Checklist progress</span>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="progress"><div class="track"><div class="fill" style="width:40%"></div></div><span class="num">2/5</span></div>
+          <div class="progress"><div class="track"><div class="fill done" style="width:100%"></div></div><span class="num">5/5</span></div>
+        </div>
+        <span class="tag" style="margin-top:24px">Loading skeleton</span>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="skel" style="height:72px"></div>
+          <div class="skel" style="height:48px"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="tag">Empty state</span>
+        <div class="empty">
+          <svg class="i xl"><use href="#board"/></svg>
+          <div class="t-h3">No cards yet</div>
+          <div class="t-muted" style="max-width:32ch">Add your first card to start planning this list.</div>
+          <button class="btn btn-primary" style="margin-top:8px"><svg class="i"><use href="#plus"/></svg>Add a card</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DO / DON'T ================= -->
+  <section id="rules">
+    <h2>Do and don’t</h2>
+    <p class="lead">The quickest checks for keeping the UI flat and consistent.</p>
+    <div class="grid g2">
+      <div class="dd do"><div class="bar"><svg class="i"><use href="#ok"/></svg>Do: separate with a border</div>
+        <div class="body"><div class="stage"><button class="card"><span class="title">Flat card with a 1px border</span></button></div>
+        <span class="caption">Surfaces differ by border and tone. Depth is reserved for things that float.</span></div></div>
+      <div class="dd dont"><div class="bar"><svg class="i"><use href="#err"/></svg>Don’t: add shadows to cards</div>
+        <div class="body"><div class="stage"><div class="card fake-shadow" style="border-color:transparent"><span class="title">Card floating with a shadow</span></div></div>
+        <span class="caption">Shadows on resting UI break the flat look.</span></div></div>
+
+      <div class="dd do"><div class="bar"><svg class="i"><use href="#ok"/></svg>Do: one primary action</div>
+        <div class="body"><div class="row"><button class="btn btn-primary">Save changes</button><button class="btn btn-secondary">Cancel</button></div>
+        <span class="caption">Primary for the main action, secondary or ghost for the rest.</span></div></div>
+      <div class="dd dont"><div class="bar"><svg class="i"><use href="#err"/></svg>Don’t: stack competing primaries</div>
+        <div class="body"><div class="row"><button class="btn btn-primary">Save</button><button class="btn btn-primary">Save and close</button><button class="btn btn-primary">Cancel</button></div>
+        <span class="caption">If everything is blue, nothing stands out.</span></div></div>
+
+      <div class="dd do"><div class="bar"><svg class="i"><use href="#ok"/></svg>Do: soft labels, dark text</div>
+        <div class="body"><div class="row"><span class="label l-green">Design</span><span class="label l-purple">Frontend</span><span class="label l-orange">Backend</span></div>
+        <span class="caption">Readable, calm, and consistent.</span></div></div>
+      <div class="dd dont"><div class="bar"><svg class="i"><use href="#err"/></svg>Don’t: gradients and loud fills</div>
+        <div class="body"><div class="row"><span class="label fake-grad">Design</span><span class="label" style="background:#ff2d55;color:#fff">Urgent</span><span class="label" style="background:#00c853;color:#fff">Done</span></div>
+        <span class="caption">Saturated fills and gradients fight the content.</span></div></div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

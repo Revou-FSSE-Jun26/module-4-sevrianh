@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+dist/
+build/
+coverage/
+
+# Generated files
+*.min.js
+*.map
+*.log
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
