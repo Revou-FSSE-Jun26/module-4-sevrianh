@@ -33,4 +33,18 @@ class BoardEntity(db.Model):
         cascade='all, delete-orphan',
         passive_deletes=True,
     )
-    # Task 3.2 adds activity_events and invite_links (DB-12) here.
+    activity_events = db.relationship(
+        'ActivityEventEntity',
+        backref='board',
+        lazy='select',
+        order_by='ActivityEventEntity.created_at',
+        cascade='all, delete-orphan',
+        passive_deletes=True,
+    )
+    invite_links = db.relationship(
+        'InviteLinkEntity',
+        backref='board',
+        lazy='select',
+        cascade='all, delete-orphan',
+        passive_deletes=True,
+    )

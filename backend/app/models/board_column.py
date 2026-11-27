@@ -39,4 +39,11 @@ class BoardColumnEntity(db.Model):
     is_done = db.Column(db.Boolean, nullable=False, default=False)
 
     # Columns are hard-deleted (U-01): deleted_at is declared (DB-05) but never written.
-    # Task 3.2 adds the cards relationship (DB-12) here.
+    cards = db.relationship(
+        'CardEntity',
+        backref='column',
+        lazy='select',
+        order_by='CardEntity.order',
+        cascade='all, delete-orphan',
+        passive_deletes=True,
+    )

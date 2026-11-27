@@ -45,5 +45,41 @@ class UserEntity(db.Model):
         lazy='select',
         foreign_keys='TeamEntity.owner_id',
     )
-    # Task 3.2 adds assigned_cards, created_cards, comments, notifications,
-    # activity_events and created_invite_links (DB-12) here.
+    # DB-12: CardEntity has two foreign keys to users, so foreign_keys is explicit.
+    assigned_cards = db.relationship(
+        'CardEntity',
+        backref='assignee',
+        lazy='select',
+        foreign_keys='CardEntity.assignee_id',
+    )
+    created_cards = db.relationship(
+        'CardEntity',
+        backref='creator',
+        lazy='select',
+        foreign_keys='CardEntity.created_by_id',
+    )
+    # DB-12: no ORM delete cascade; authored history is preserved.
+    comments = db.relationship(
+        'CardCommentEntity',
+        backref='author',
+        lazy='select',
+        foreign_keys='CardCommentEntity.author_id',
+    )
+    notifications = db.relationship(
+        'NotificationEntity',
+        backref='recipient',
+        lazy='select',
+        foreign_keys='NotificationEntity.recipient_id',
+    )
+    activity_events = db.relationship(
+        'ActivityEventEntity',
+        backref='actor',
+        lazy='select',
+        foreign_keys='ActivityEventEntity.actor_id',
+    )
+    created_invite_links = db.relationship(
+        'InviteLinkEntity',
+        backref='created_by',
+        lazy='select',
+        foreign_keys='InviteLinkEntity.created_by_id',
+    )
