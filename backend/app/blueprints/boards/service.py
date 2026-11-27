@@ -25,7 +25,7 @@ from app.models import (
     TeamMembershipEntity,
     UserEntity,
 )
-from app.utils import team_members as tm
+from app.utils import invite_links as il, team_members as tm
 from app.utils.auth import Access
 
 ADMIN = 'admin'
@@ -36,13 +36,7 @@ def _to_uuid(value: Any) -> UUID:
 
 
 def _membership(team_id: UUID, user_id: UUID) -> Optional[TeamMembershipEntity]:
-    return (
-        db.session.query(TeamMembershipEntity)
-        .filter(TeamMembershipEntity.team_id == team_id)
-        .filter(TeamMembershipEntity.user_id == _to_uuid(user_id))
-        .filter(TeamMembershipEntity.deleted_at.is_(None))
-        .first()
-    )
+    return tm.find_membership(team_id, _to_uuid(user_id))
 
 
 def _load_board(board_id: Any) -> BoardEntity:
@@ -233,6 +227,18 @@ def remove_team_member_service(board_id: Any, user_id: Any, target_id: Any) -> d
         db.session.rollback()
         raise
     return {'id': removed_id}
+
+
+def create_invite_link_service(board_id: Any, user_id: Any) -> dict[str, Any]:
+    """Create a read-only Invite Link for the Board (Admin only, R3.1)."""
+    return il.create_link(require_team_admin_service(board_id, user_id).id, _to_uuid(user_id))
+
+
+def revoke_invite_link_service(board_id: Any, user_id: Any, invite_id: Any) -> dict[str, str]:
+    """Revoke an Invite Link; Board and link 404 come before the Admin check (R3.6)."""
+    link = il.find_link(_load_board(board_id).id, invite_id)
+    require_team_admin_service(board_id, user_id)
+    return il.revoke_link(link)
 
 
 def delete_board_service(board_id: Any, user_id: Any) -> dict[str, str]:

@@ -45,6 +45,22 @@ class MemberRoleUpdateSchema(Schema):
     role = fields.String(required=True, validate=validate.OneOf(['member', 'admin']))
 
 
+class InviteLinkCreateSchema(Schema):
+    """POST /api/boards/<id>/invite-links body: empty or `{}`, any field rejected (R3.1)."""
+
+    class Meta:
+        unknown = RAISE
+
+
+class InviteLinkSchema(Schema):
+    """Create response: the raw token is returned once only (R3.1)."""
+
+    id = fields.UUID()
+    board_id = fields.UUID()
+    token = fields.String()
+    created_at = fields.DateTime()
+
+
 class MemberSchema(Schema):
     user_id = fields.UUID()
     name = fields.String()

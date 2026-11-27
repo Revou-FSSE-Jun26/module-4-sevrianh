@@ -6,6 +6,8 @@ from app.blueprints.boards.schema import (
     BoardDetailSchema,
     BoardSchema,
     BoardUpdateSchema,
+    InviteLinkCreateSchema,
+    InviteLinkSchema,
     MemberAddSchema,
     MemberRoleUpdateSchema,
     MemberSchema,
@@ -13,11 +15,13 @@ from app.blueprints.boards.schema import (
 from app.blueprints.boards.service import (
     add_team_member_service,
     create_board_service,
+    create_invite_link_service,
     delete_board_service,
     get_board_service,
     list_boards_service,
     list_team_members_service,
     remove_team_member_service,
+    revoke_invite_link_service,
     update_board_service,
     update_team_member_role_service,
 )
@@ -57,6 +61,20 @@ def update_board_route(current_user: UserEntity, board_id: str):
 @token_required
 def delete_board_route(current_user: UserEntity, board_id: str):
     return success(delete_board_service(board_id, current_user.id))
+
+
+@boards_bp.route('/boards/<board_id>/invite-links', methods=['POST'])
+@token_required
+def create_invite_link_route(current_user: UserEntity, board_id: str):
+    InviteLinkCreateSchema().load(request.get_json(silent=True) or {})
+    link = create_invite_link_service(board_id, current_user.id)
+    return success(InviteLinkSchema().dump(link), 201)
+
+
+@boards_bp.route('/boards/<board_id>/invite-links/<invite_id>', methods=['DELETE'])
+@token_required
+def revoke_invite_link_route(current_user: UserEntity, board_id: str, invite_id: str):
+    return success(revoke_invite_link_service(board_id, current_user.id, invite_id))
 
 
 @boards_bp.route('/boards/<board_id>/members', methods=['POST'])
