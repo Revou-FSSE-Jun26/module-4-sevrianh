@@ -1,1 +1,11 @@
 ﻿.kiro/references/
+
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+venv/
+.next/
+node_modules/
