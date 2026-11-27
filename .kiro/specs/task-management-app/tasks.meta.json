@@ -62,6 +62,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795762502481
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762999454
       }
     ],
     "2.3 Implement FLOAT ordering constants and pure allocation helpers (T-05)": [
@@ -69,6 +74,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759744690
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795763003227
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795763877865
       }
     ],
     "3.1 Create Entity models for users, teams, memberships, boards and columns (T-06)": [
@@ -76,6 +91,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759744765
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795763882295
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795764962236
       }
     ],
     "3.2 Create Entity models for cards, comments, notifications, activity events and invite links (T-07)": [
@@ -83,6 +108,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759744843
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795764966933
       }
     ],
     "3.3 Set up Flask-Migrate and create the initial migration (T-08)": [
@@ -363,6 +393,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795762502707
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762999549
       }
     ],
     "17.2 Implement useModalBehavior and useDebouncedValue with tests (T-57)": [
@@ -370,6 +405,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759747633
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795763003729
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795763878368
       }
     ],
     "17.3 Implement useErrorHandler with tests (T-58)": [
@@ -377,6 +422,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759747710
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795763882694
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795764962742
       }
     ],
     "17.4 Implement useNotifications with tests (T-59)": [
@@ -384,6 +439,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759747782
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795764967432
       }
     ],
     "17.5 Implement useDragAndDrop with tests (T-60)": [
@@ -559,6 +619,13 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795762496016
+      }
+    ],
+    "2. Backend core utilities": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795763878026
       }
     ]
   }

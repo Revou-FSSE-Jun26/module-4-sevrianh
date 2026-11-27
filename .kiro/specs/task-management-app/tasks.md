@@ -21,33 +21,33 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/app/config.py, backend/app/extensions.py, backend/app/__init__.py, backend/Procfile, backend/.env.example, .gitignore
     - _Requirements: 20.10, 27.1, 27.2, 27.7, 27.8, 29.6_
 
-- [ ] 2. Backend core utilities
+- [x] 2. Backend core utilities
   - [x] 2.1 Implement time helper, response helpers and the exception catalog (T-03)
     - `app/utils/time.py` with `utc_now()` (DB-05); `app/utils/responses.py` with `success()`, `error()` and `format_validation_error()` (BE-04, BE-07).
     - `app/exceptions.py`: `AppException`, the `ACCESS_OR_NOT_FOUND_MESSAGE` constant and every class of the BE-10 catalog with its status code and default message.
     - Unit tests for the three helpers (fixed payload gives the exact normalized string of BE-04) and for the exception status codes.
     - Files: backend/app/utils/time.py, backend/app/utils/responses.py, backend/app/exceptions.py, backend/tests/unit/auth/test_core_helpers.py
     - _Requirements: 20.1, 20.4, 20.5, 20.11, 20.13_
-  - [-] 2.2 Implement global error handler, structured logging and health route (T-04)
+  - [x] 2.2 Implement global error handler, structured logging and health route (T-04)
     - `app/error_handlers.py` `register_error_handlers(app)` (BE-11): `AppException`, Marshmallow `ValidationError`, Werkzeug `HTTPException` (404 `{"error": "Not found"}`, 405), any other exception to 500 `{"error": "Internal server error"}` with no traceback; call it from `create_app()`.
     - `app/logging_config.py` JSON logger with exactly the fields `level`, `endpoint`, `error_type`, `user_id` (BE-12); `app/health.py` `GET /api/health` returning `{"data": {"status": "ok"}}`, registered in `create_app()`.
     - In the same function register the four Flask-JWT-Extended callbacks (`unauthorized_loader`, `invalid_token_loader`, `expired_token_loader`, `token_verification_failed_loader`), each returning the 401 envelope built with `error()`, never the library default 422 (BE-13).
     - Tests: on a test-only JWT-protected route a malformed token, an expired token and a missing token are all 401 in the envelope (never 422); unknown URL is JSON 404, unsupported method is JSON 405, patched service raising `RuntimeError` gives the 500 envelope without `Traceback`, log record keys equal the four fields, health returns 200.
     - Files: backend/app/error_handlers.py, backend/app/logging_config.py, backend/app/health.py, backend/app/__init__.py, backend/tests/unit/auth/test_error_handling.py
     - _Requirements: 14.3, 20.1, 20.2, 20.3, 20.7, 27.3_
-  - [~] 2.3 Implement FLOAT ordering constants and pure allocation helpers (T-05)
+  - [x] 2.3 Implement FLOAT ordering constants and pure allocation helpers (T-05)
     - `app/utils/ordering.py` with `ORDER_STEP = 1024.0`, `MIN_GAP = 1e-6` and pure helpers for first, append, head and between allocation, gap detection and the sequence of rebalanced values (BE-14).
     - Unit tests: each allocation rule, head insertion 60 times keeps values positive and strictly increasing once a rebalance is applied.
     - Files: backend/app/utils/ordering.py, backend/tests/unit/cards/test_ordering_helpers.py
     - _Requirements: 5.2, 5.3, 5.9, 6.2, 6.9, 7.8_
 
 - [ ] 3. Database models, migrations and schema tests
-  - [~] 3.1 Create Entity models for users, teams, memberships, boards and columns (T-06)
+  - [x] 3.1 Create Entity models for users, teams, memberships, boards and columns (T-06)
     - One model per file with the DB-05 required columns, DB-09 domain columns, DB-11 `ondelete` policy, named constraints and indexes (`uq_users_username`, `ck_users_username_format`, `uq_users_email_lower`, `uq_teams_owner_id_personal`, `uq_team_memberships_team_id_user_id`, `ck_team_memberships_role`, the DB-08 column order index and check) and the foreign-key indexes of design section 5.2 for these tables: `ix_team_memberships_user_id`, `ix_teams_owner_id`, `ix_boards_team_id`.
     - Relationships per the DB-12 catalog (both sides, explicit `backref`, `lazy`, `order_by`, `foreign_keys`). Columns are hard-deleted: never write `deleted_at` on `board_columns` (see U-01 in "Depends on a user decision").
     - Files: backend/app/models/user.py, backend/app/models/team.py, backend/app/models/team_membership.py, backend/app/models/board.py, backend/app/models/board_column.py, backend/app/models/__init__.py
     - _Requirements: 24.1, 26.1, 26.6, 26.7, 26.9, 26.12_
-  - [~] 3.2 Create Entity models for cards, comments, notifications, activity events and invite links (T-07)
+  - [-] 3.2 Create Entity models for cards, comments, notifications, activity events and invite links (T-07)
     - `CardEntity` per the DB-08 complete example (FLOAT `order`, `ck_cards_order_positive`, `ix_cards_column_id_order`, partial unique `uq_cards_column_id_order_active`), `CardCommentEntity` (`parent_comment_id`, `deleted_at` is the only tombstone marker), `NotificationEntity` (`recipient_id`, `comment_id`, no `user_id`, no `card_id`), `ActivityEventEntity` (`ck_activity_events_event_type` with the five event types), `InviteLinkEntity` (`token_hash`, `revoked_at`).
     - Foreign-key indexes of design section 5.2 for these tables: `ix_cards_assignee_id`, `ix_cards_created_by_id`, `ix_card_comments_card_id`, `ix_card_comments_author_id`, `ix_card_comments_parent_comment_id`, `ix_notifications_comment_id`, `ix_activity_events_actor_id`, `ix_invite_links_board_id`, `ix_invite_links_created_by_id`. No title-search index is created (design D-07 is not approved, see U-03).
     - Remaining DB-12 relationships and DB-11 delete behavior; register all ten models in `models/__init__.py`.
@@ -352,20 +352,20 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - _Requirements: 19.9, 21.8, 21.10, 21.11, 21.12, 21.13, 22.1_
 
 - [ ] 17. Shared components and hooks
-  - [-] 17.1 Implement BaseButton, BaseBadge and BaseModal with tests (T-56)
+  - [x] 17.1 Implement BaseButton, BaseBadge and BaseModal with tests (T-56)
     - `BaseButton` variants `primary`, `secondary`, `destructive` (literal class lookups, hover, focus-visible ring, disabled; the only file with a raw button element, ST-08); `BaseBadge` colors `gray`, `green`, `yellow`, `red`, `blue` (FE-12 mapping); `BaseModal` with Escape close, focus into the modal and focus return, `aria-modal`, using `useModalBehavior` from the next task.
     - One test per variant and color; icon-only controls require `aria-label`.
     - Files: frontend/components/shared/BaseButton.tsx, frontend/components/shared/BaseBadge.tsx, frontend/components/shared/BaseModal.tsx, frontend/__tests__/BaseButton.test.tsx, frontend/__tests__/BaseBadge.test.tsx, frontend/__tests__/BaseModal.test.tsx
     - _Requirements: 25.1, 25.2, 25.3, 25.4, 25.5, 25.6, 28.3_
-  - [~] 17.2 Implement useModalBehavior and useDebouncedValue with tests (T-57)
+  - [x] 17.2 Implement useModalBehavior and useDebouncedValue with tests (T-57)
     - `hooks/useModalBehavior.ts` (Escape key, focus move and return, listener cleanup); `hooks/useDebouncedValue.ts` with fake-timer tests (299 ms no update, 300 ms update).
     - Files: frontend/hooks/useModalBehavior.ts, frontend/hooks/useDebouncedValue.ts, frontend/__tests__/useModalBehavior.test.tsx, frontend/__tests__/useDebouncedValue.test.tsx
     - _Requirements: 10.10, 25.4, 25.5, 28.3_
-  - [~] 17.3 Implement useErrorHandler with tests (T-58)
+  - [x] 17.3 Implement useErrorHandler with tests (T-58)
     - `hooks/useErrorHandler.ts`: the FE-24 table (401 toast, logout and redirect; 403; 404; 400 and 409 server string; 500+ and status 0 generic) through `lib/toast.ts`; a test per row, and a test that a 401 from login is not routed to the session-expired branch.
     - Files: frontend/hooks/useErrorHandler.ts, frontend/__tests__/useErrorHandler.test.tsx
     - _Requirements: 22.1, 22.2, 22.3, 22.4, 22.5, 28.3_
-  - [~] 17.4 Implement useNotifications with tests (T-59)
+  - [-] 17.4 Implement useNotifications with tests (T-59)
     - `hooks/useNotifications.ts`: poll every `NOTIFICATION_POLL_MS = 30_000`, clear the interval on unmount, no polling when not authenticated, `unreadCount` from `unread_count`, polling failures keep the previous page without a toast except 401 (FE-28). Fake-timer tests: 0 calls at 29 999 ms, 1 at 30 000 ms, none after unmount.
     - Files: frontend/hooks/useNotifications.ts, frontend/__tests__/useNotifications.test.tsx
     - _Requirements: 9.14, 28.3_
