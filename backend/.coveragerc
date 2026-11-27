@@ -1,0 +1,9 @@
+[run]
+source = app
+branch = False
+
+[report]
+# Overall threshold (TC-17). The 90% per service.py threshold is checked with:
+#   coverage report --include="app/blueprints/*/service.py" --fail-under=90
+fail_under = 85
+show_missing = True

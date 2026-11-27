@@ -399,3 +399,53 @@
 - **Steering and guidelines:** no approved rule found that the new requirements contradict. Steering `tech.md` TC-17 (coverage thresholds) and TC-19 (optional fifth Guest scenario, mobile project for `pages.spec.ts`) hold rules that Requirement 28 does not restate; they are not changed.
 - **Not yet existing in the repository (facts, not requirements):** no `Procfile`, no `.env.example`, no `README.md`, no `guidelines/VIOLATIONS.md`, no `design.md` or `tasks.md`, no `/specs` copy of the four files, no deployment, and no test suite. The CHANGELOG entries V2 to V5 lack the labels Prompt, Before, and After in the form of steering `tech.md` TC-21. The repository has one commit, `initial commit`, without a phase prefix. No criterion of Requirements 27 to 29 is claimed as met.
 - **Pending decisions:** none.
+## V10 - 2026-11-27
+**Prompt**: The user asked for a review of `design.md` against `requirements.md`, the guidelines and the steering, to refine missing design and deviations with recommendations, and then for `tasks.md` to be synchronised with the refined design. Only `tasks.md` and this changelog were edited in this round; `requirements.md`, `design.md`, steering, guidelines, references and code were not.
+**Before** (V9 tasks):
+- `tasks.md`: 1256 lines, 80 leaf tasks (T-01 to T-80), 16 property tasks, 307 criterion ids covered, 32 routes covered.
+- Review result as stated in the request: 15 deviations and gaps found in `design.md`; decisions needing confirmation D-01 to D-03. `design.md` line count before the refinement was not recorded, so no before figure is given.
+- Unmet mandatory criterion R26.3 (title-search index) recorded as unmet: 0 (the V9 plan listed it as covered by 3.3 and 3.4).
+**After** (V10 tasks):
+- `tasks.md`: 1275 lines, 80 leaf tasks (no task added, removed or renumbered), 16 property tasks with unchanged Validates lines, 307 criterion ids covered, 32 routes covered. `design.md`: 807 lines.
+- Design fixes applied in `design.md`: 15; `tasks.md` changed only where a fix affects implementation (see Task changes). Decisions needing confirmation D-01 to D-03 became D-01 and D-04 to D-08. Unmet mandatory criterion R26.3 recorded as unmet: 1. Requirements criteria 307 to 307.
+### Changes
+**Specification changes**
+- `requirements.md` unchanged at V9.
+**Design changes** (made in `design.md` by the review; mirrored in `tasks.md`)
+- Section 6.1: lock order, conflict check that excludes the moved row, temporary value formula, idempotent repeated move.
+- Section 4a status-code note: 401 on guarded routes, 400 for a non-UUID path id, Guest-route 401 steps.
+- Section 7 error rows: UUID path 400 and body or query id 400 with the `GET /api/cards` `board_id` exception.
+- Section 2.4 and 4c: role of the signed-in user from `GET /api/boards/<id>/members`, none in Guest_Mode, `AnalyticsPanel` only for Admins.
+- Section 2.4: layout restores `initialToken` and `initialUser`; Dashboard `BoardForm` sends no `team_id`.
+- Section 4c: Notification link `/boards/<board_id>?card=<card_id>`, no fetch before the first 30-second interval.
+- Section 9: `update_card_service` row lock (`with_for_update`) for concurrent edits.
+- Section 9: query budget counts the Columns and Cards queries, Assignee joined.
+- Section 5.2 Foreign-key indexes: 12 named `ix_<table>_<column>` indexes.
+- Section 5.4 notes: all Teams are personal in V1; Columns are hard-deleted so the partial index acts as a full unique index.
+- Testing Strategy: concurrent-edit test, query-budget test, table-driven suites, Requirement 28 mapping.
+- Decisions D-01 to D-08 recorded (D-01 and D-04 to D-08 need confirmation).
+- "Not covered": R26.3 title-search index unmet until D-07 is decided.
+- Notification `message` text defined (D-08).
+- Error rows: JWT error callbacks return the 401 envelope, never 422.
+**Implementation changes**
+- None. No code was written or run.
+**Bug fixes**
+- None.
+**Breaking changes**
+- `GET /api/cards` uses one service function, `list_cards_service`, which dispatches on `assignee` and `q`.
+**Task changes** (`tasks.md`, no renumbering)
+- 3.1 to 3.4: 12 foreign-key indexes in models, initial migration and schema test; no title-search index.
+- 2.2, 4.2: four JWT callbacks and 401 tests for malformed, expired and missing tokens.
+- 8.5: query-budget test. 10.1: `update_card_service` row lock. 10.3: BE-14 lock order and temporary value formula. 10.8: `list_cards_service`.
+- 10.10: idempotent move, 409 for another Card, cross-Column move, concurrent move and concurrent edit on PostgreSQL, 400 for unknown body ids.
+- 11.1, 11.5: mention `message` text (D-08). 14.2: UUID path test over every route with a path id.
+- 18.2 to 18.7: bell link and no early fetch, Dashboard without `team_id`, role from the members route, no members request in Guest_Mode, `AnalyticsPanel` for `admin` only.
+- 21.1, 23: `--repeat-each=3` script as configuration, TC-17 coverage thresholds; Requirement 28 mapping note.
+- "Depends on a user decision": U-03 rewritten, D-04 to D-08 added. Coverage rows updated for R1.6, R4.2, R7.13, R11.11, R15.3, R26.3.
+### Reason
+- The design was refined after a review; the plan had to follow it without changing task numbers, and the open mandatory gap (R26.3) had to stay visible.
+### Impact
+- **Affected design components and tasks:** as listed above; 80 leaf tasks keep their numbers and T-NN ids; the dependency graph is unchanged.
+- **Follow-ups that are recommendations only and were NOT edited:** `database.md` DB-09 to name the foreign-key indexes and, if D-07 is approved, the trigram index `ix_cards_title_lower_trgm` and the `pg_trgm` extension; `frontend.md` FE-02 and `structure.md` ST-07 to list `components/board/AnalyticsPanel.tsx`.
+- **Decisions awaiting the user:** D-01, D-04, D-05, D-06, D-07, D-08.
+- **Not run:** no task, test or check of the plan has been run against code.

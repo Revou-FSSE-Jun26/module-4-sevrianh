@@ -1,0 +1,565 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create backend skeleton, dependency pins and tool configuration (T-01)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759743326
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759756727
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795761435813
+      }
+    ],
+    "1.2 Add configuration, extensions, app factory, Procfile, env example and gitignore (T-02)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744371
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795761440453
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762134715
+      }
+    ],
+    "2.1 Implement time helper, response helpers and the exception catalog (T-03)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744481
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762140472
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762495850
+      }
+    ],
+    "2.2 Implement global error handler, structured logging and health route (T-04)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744595
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762502481
+      }
+    ],
+    "2.3 Implement FLOAT ordering constants and pure allocation helpers (T-05)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744690
+      }
+    ],
+    "3.1 Create Entity models for users, teams, memberships, boards and columns (T-06)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744765
+      }
+    ],
+    "3.2 Create Entity models for cards, comments, notifications, activity events and invite links (T-07)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744843
+      }
+    ],
+    "3.3 Set up Flask-Migrate and create the initial migration (T-08)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744922
+      }
+    ],
+    "3.4 Write schema, constraint and relationship tests on PostgreSQL (T-09)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759744994
+      }
+    ],
+    "4.1 Implement the guard decorators and JWT error callbacks (T-10)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745106
+      }
+    ],
+    "4.2 Write table-driven tests for every Access Resolution Table step (T-11)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745175
+      }
+    ],
+    "5.1 Implement the auth Blueprint (register and login) (T-13)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745241
+      }
+    ],
+    "5.2 Write auth service and route tests (T-14)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745309
+      }
+    ],
+    "6.1 Implement the users Blueprint (profile) (T-16)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745380
+      }
+    ],
+    "6.2 Write users service and route tests (T-17)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745455
+      }
+    ],
+    "7. Checkpoint - foundation, auth and users": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745524
+      }
+    ],
+    "8.1 Implement board services, Team access helpers and board routes (T-18)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745595
+      }
+    ],
+    "8.2 Implement Team member management routes and services (T-19)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745666
+      }
+    ],
+    "8.4 Implement Invite Link create and revoke (T-21)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745733
+      }
+    ],
+    "8.5 Write boards service, route and permission-matrix tests (T-22)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745808
+      }
+    ],
+    "9.1 Implement the columns Blueprint (T-25)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745876
+      }
+    ],
+    "9.2 Write columns service and route tests (T-26)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759745946
+      }
+    ],
+    "10.1 Implement card create, update and soft delete (T-27)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746020
+      }
+    ],
+    "10.3 Implement card move with two-phase rebalance (T-29)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746110
+      }
+    ],
+    "10.8 Implement the card list route for search and My Tasks (T-34)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746189
+      }
+    ],
+    "10.10 Write cards service and route tests (T-36)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746258
+      }
+    ],
+    "11.1 Implement the notifications Blueprint and mention service (T-37)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746330
+      }
+    ],
+    "11.4 Wire Notification cleanup into member removal (T-40)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746407
+      }
+    ],
+    "11.5 Write notifications service and route tests (T-41)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746487
+      }
+    ],
+    "12.1 Implement the comments Blueprint (T-42)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746549
+      }
+    ],
+    "12.2 Write comments service and route tests (T-43)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746618
+      }
+    ],
+    "13.1 Implement the analytics Blueprint (T-45)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746689
+      }
+    ],
+    "13.2 Write analytics service and route tests (T-46)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746763
+      }
+    ],
+    "14.1 Register all eight Blueprints and the health route in create_app (T-49)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746846
+      }
+    ],
+    "14.2 Write the route inventory, 401 sweep, envelope and scope tests (T-50)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759746923
+      }
+    ],
+    "14.3 Write the API-level end-to-end flow test (T-51)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747004
+      }
+    ],
+    "14.4 Create the load-test script and the RESULTS.md template (T-52)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747072
+      }
+    ],
+    "15. Checkpoint - backend complete": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747140
+      }
+    ],
+    "16.1 Create the Next.js project, dependency pins and style tooling (T-53)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747219
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759756890
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795761435909
+      }
+    ],
+    "16.2 Implement API types, error class, toast helper, ordering helper and API client (T-54)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747297
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795761440516
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762135265
+      }
+    ],
+    "16.3 Implement AuthContext, route middleware and the root layout (T-55)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747381
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762140340
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762495945
+      }
+    ],
+    "17.1 Implement BaseButton, BaseBadge and BaseModal with tests (T-56)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747491
+      },
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762502707
+      }
+    ],
+    "17.2 Implement useModalBehavior and useDebouncedValue with tests (T-57)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747633
+      }
+    ],
+    "17.3 Implement useErrorHandler with tests (T-58)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747710
+      }
+    ],
+    "17.4 Implement useNotifications with tests (T-59)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747782
+      }
+    ],
+    "17.5 Implement useDragAndDrop with tests (T-60)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747860
+      }
+    ],
+    "17.6 Implement useCardSearch with tests (T-61)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759747933
+      }
+    ],
+    "18.1 Build the /register and /login pages with tests (T-62)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748017
+      }
+    ],
+    "18.2 Build Header and NotificationBell and mount them in the layout (T-63)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748091
+      }
+    ],
+    "18.3 Build the Dashboard page with BoardCard and BoardForm (T-64)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748169
+      }
+    ],
+    "18.4 Build the Board Detail page and Kanban components (T-65)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748242
+      }
+    ],
+    "18.5 Add CardSearch to the Board Detail page (T-66)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748314
+      }
+    ],
+    "18.6 Implement the Guest_Mode read-only Board view (T-67)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748383
+      }
+    ],
+    "18.7 Add the Admin-only analytics panel to Board Detail (T-68)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748458
+      }
+    ],
+    "18.8 Build Card_Detail_Modal and the Comment thread components (T-69)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748525
+      }
+    ],
+    "18.9 Build the /my-tasks page with MyTaskRow (T-70)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748598
+      }
+    ],
+    "18.10 Build the /profile page (T-71)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748667
+      }
+    ],
+    "19. Checkpoint - frontend pages": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748736
+      }
+    ],
+    "20.1 Apply the responsive and accessibility pass and add the viewport helper (T-72)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748801
+      }
+    ],
+    "21.1 Create the Playwright configuration and API helpers (T-73)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748874
+      }
+    ],
+    "21.2 Write e2e/auth.spec.ts (T-74)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759748947
+      }
+    ],
+    "21.3 Write e2e/kanban.spec.ts (T-75)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759749027
+      }
+    ],
+    "21.4 Write e2e/pages.spec.ts (T-76)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759749102
+      }
+    ],
+    "22.1 Write README.md with a project brief and screenshot placeholders (T-77)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759749174
+      }
+    ],
+    "22.2 Create the guideline violation report skeleton (T-78)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759749251
+      }
+    ],
+    "22.3 Add documentation checker scripts (T-79)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759749326
+      }
+    ],
+    "22.4 Copy the final specs to the submission folder (T-80)": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759749394
+      }
+    ],
+    "23. Final checkpoint - all automated checks": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795759749469
+      }
+    ],
+    "1. Backend project scaffold": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762134798
+      }
+    ],
+    "16. Frontend scaffold, API client and auth state": [
+      {
+        "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795762496016
+      }
+    ]
+  }
+}
