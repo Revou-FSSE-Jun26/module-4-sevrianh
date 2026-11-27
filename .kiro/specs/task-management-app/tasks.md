@@ -41,35 +41,35 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/app/utils/ordering.py, backend/tests/unit/cards/test_ordering_helpers.py
     - _Requirements: 5.2, 5.3, 5.9, 6.2, 6.9, 7.8_
 
-- [ ] 3. Database models, migrations and schema tests
+- [x] 3. Database models, migrations and schema tests
   - [x] 3.1 Create Entity models for users, teams, memberships, boards and columns (T-06)
     - One model per file with the DB-05 required columns, DB-09 domain columns, DB-11 `ondelete` policy, named constraints and indexes (`uq_users_username`, `ck_users_username_format`, `uq_users_email_lower`, `uq_teams_owner_id_personal`, `uq_team_memberships_team_id_user_id`, `ck_team_memberships_role`, the DB-08 column order index and check) and the foreign-key indexes of design section 5.2 for these tables: `ix_team_memberships_user_id`, `ix_teams_owner_id`, `ix_boards_team_id`.
     - Relationships per the DB-12 catalog (both sides, explicit `backref`, `lazy`, `order_by`, `foreign_keys`). Columns are hard-deleted: never write `deleted_at` on `board_columns` (see U-01 in "Depends on a user decision").
     - Files: backend/app/models/user.py, backend/app/models/team.py, backend/app/models/team_membership.py, backend/app/models/board.py, backend/app/models/board_column.py, backend/app/models/__init__.py
     - _Requirements: 24.1, 26.1, 26.6, 26.7, 26.9, 26.12_
-  - [-] 3.2 Create Entity models for cards, comments, notifications, activity events and invite links (T-07)
+  - [x] 3.2 Create Entity models for cards, comments, notifications, activity events and invite links (T-07)
     - `CardEntity` per the DB-08 complete example (FLOAT `order`, `ck_cards_order_positive`, `ix_cards_column_id_order`, partial unique `uq_cards_column_id_order_active`), `CardCommentEntity` (`parent_comment_id`, `deleted_at` is the only tombstone marker), `NotificationEntity` (`recipient_id`, `comment_id`, no `user_id`, no `card_id`), `ActivityEventEntity` (`ck_activity_events_event_type` with the five event types), `InviteLinkEntity` (`token_hash`, `revoked_at`).
     - Foreign-key indexes of design section 5.2 for these tables: `ix_cards_assignee_id`, `ix_cards_created_by_id`, `ix_card_comments_card_id`, `ix_card_comments_author_id`, `ix_card_comments_parent_comment_id`, `ix_notifications_comment_id`, `ix_activity_events_actor_id`, `ix_invite_links_board_id`, `ix_invite_links_created_by_id`. No title-search index is created (design D-07 is not approved, see U-03).
     - Remaining DB-12 relationships and DB-11 delete behavior; register all ten models in `models/__init__.py`.
     - Files: backend/app/models/card.py, backend/app/models/card_comment.py, backend/app/models/notification.py, backend/app/models/activity_event.py, backend/app/models/invite_link.py, backend/app/models/__init__.py
     - _Requirements: 3.2, 6.8, 24.1, 26.1, 26.2, 26.6, 26.7, 26.10, 26.11_
-  - [~] 3.3 Set up Flask-Migrate and create the initial migration (T-08)
+  - [x] 3.3 Set up Flask-Migrate and create the initial migration (T-08)
     - Initialise `backend/migrations/` and generate the first revision creating all ten tables, every named CHECK constraint, the three partial unique indexes `uq_cards_column_id_order_active`, `uq_board_columns_board_id_order_active`, `uq_teams_owner_id_personal` by name (TC-10), and the 12 foreign-key indexes of design section 5.2 named `ix_<table>_<column>` (`ix_team_memberships_user_id`, `ix_teams_owner_id`, `ix_boards_team_id`, `ix_cards_assignee_id`, `ix_cards_created_by_id`, `ix_card_comments_card_id`, `ix_card_comments_author_id`, `ix_card_comments_parent_comment_id`, `ix_notifications_comment_id`, `ix_activity_events_actor_id`, `ix_invite_links_board_id`, `ix_invite_links_created_by_id`). No title-search index and no `pg_trgm` extension is created (D-07, U-03). Review the generated file by hand; `db.create_all()` is not used outside test fixtures.
     - Files: backend/migrations/ (env.py, alembic.ini, versions/<initial revision>.py)
     - _Requirements: 16.3, 26.3, 26.4, 26.7_
-  - [~] 3.4 Write schema, constraint and relationship tests on PostgreSQL (T-09)
+  - [x] 3.4 Write schema, constraint and relationship tests on PostgreSQL (T-09)
     - `tests/conftest.py` using a separate PostgreSQL database `sevy_test` (never SQLite, TC-10) with app, client and factory fixtures.
     - Implement the DB-09 and DB-08 verify bullets: expected table set, column lists, no Board-level membership table, no `is_deleted` column, no `user_id`/`card_id` on notifications, username and email constraints, partial index metadata and behavior (duplicate active order rejected, soft-deleted order does not block), every one of the 12 foreign-key indexes of design section 5.2 exists by name and no title-search index exists, personal Team uniqueness, `test_relationships_both_sides`, DB-11 delete behavior (Board delete cascades, membership delete keeps authored work).
     - Files: backend/tests/conftest.py, backend/tests/unit/boards/test_schema_models.py, backend/tests/unit/cards/test_schema_constraints.py
     - _Requirements: 6.8, 16.3, 24.1, 26.1, 26.2, 26.3, 26.4, 26.6, 26.7, 26.9, 26.10, 26.11, 26.12_
 
 - [ ] 4. Access guards
-  - [~] 4.1 Implement the guard decorators and JWT error callbacks (T-10)
+  - [x] 4.1 Implement the guard decorators and JWT error callbacks (T-10)
     - `app/utils/auth.py`: `@token_required` (passes `current_user` first) and `@board_access_required(allow_guest_read=True)` (passes the `access` object first) implementing the eight-step Access Resolution Table of BE-08 exactly, including UUID path validation after authentication (BE-04) and invite token lookup by hash.
     - Register the Flask-JWT-Extended callbacks (`unauthorized_loader`, `invalid_token_loader`, `expired_token_loader`, `token_verification_failed_loader`) in `register_error_handlers` so every token failure is the 401 envelope, never 422 (BE-13).
     - Files: backend/app/utils/auth.py, backend/app/error_handlers.py
     - _Requirements: 1.1, 1.2, 1.3, 1.6, 1.7, 2.1, 3.3, 3.4, 3.5, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.15, 8.5, 13.8, 13.9, 13.12, 13.13, 13.14, 20.12_
-  - [~] 4.2 Write table-driven tests for every Access Resolution Table step (T-11)
+  - [-] 4.2 Write table-driven tests for every Access Resolution Table step (T-11)
     - Use a test-only app fixture that registers one `@token_required` route and one Guest route (the real routes come later) and seeds Teams, Boards, Cards, memberships and invite links.
     - Cases (BE-08 verify): valid Guest token 200 read-only; invalid, revoked and empty token 404 `Not found`; bad or expired JWT with a valid token 401; no JWT and no token 401; non-member JWT without token 403 generic; token of another Board 403 generic; member with an invalid or foreign token 200; missing Board and soft-deleted Card 404 generic; token-only request to a protected route 401; malformed token, expired token and missing token on a protected route are all 401, never 422.
     - Files: backend/tests/unit/boards/test_access_resolution_table.py
@@ -351,7 +351,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: frontend/context/AuthContext.tsx, frontend/middleware.ts, frontend/app/layout.tsx, frontend/__tests__/AuthContext.test.tsx, frontend/__tests__/middleware.test.ts
     - _Requirements: 19.9, 21.8, 21.10, 21.11, 21.12, 21.13, 22.1_
 
-- [ ] 17. Shared components and hooks
+- [x] 17. Shared components and hooks
   - [x] 17.1 Implement BaseButton, BaseBadge and BaseModal with tests (T-56)
     - `BaseButton` variants `primary`, `secondary`, `destructive` (literal class lookups, hover, focus-visible ring, disabled; the only file with a raw button element, ST-08); `BaseBadge` colors `gray`, `green`, `yellow`, `red`, `blue` (FE-12 mapping); `BaseModal` with Escape close, focus into the modal and focus return, `aria-modal`, using `useModalBehavior` from the next task.
     - One test per variant and color; icon-only controls require `aria-label`.
@@ -365,16 +365,16 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - `hooks/useErrorHandler.ts`: the FE-24 table (401 toast, logout and redirect; 403; 404; 400 and 409 server string; 500+ and status 0 generic) through `lib/toast.ts`; a test per row, and a test that a 401 from login is not routed to the session-expired branch.
     - Files: frontend/hooks/useErrorHandler.ts, frontend/__tests__/useErrorHandler.test.tsx
     - _Requirements: 22.1, 22.2, 22.3, 22.4, 22.5, 28.3_
-  - [-] 17.4 Implement useNotifications with tests (T-59)
+  - [x] 17.4 Implement useNotifications with tests (T-59)
     - `hooks/useNotifications.ts`: poll every `NOTIFICATION_POLL_MS = 30_000`, clear the interval on unmount, no polling when not authenticated, `unreadCount` from `unread_count`, polling failures keep the previous page without a toast except 401 (FE-28). Fake-timer tests: 0 calls at 29 999 ms, 1 at 30 000 ms, none after unmount.
     - Files: frontend/hooks/useNotifications.ts, frontend/__tests__/useNotifications.test.tsx
     - _Requirements: 9.14, 28.3_
-  - [~] 17.5 Implement useDragAndDrop with tests (T-60)
+  - [x] 17.5 Implement useDragAndDrop with tests (T-60)
     - `hooks/useDragAndDrop.ts`: native HTML5 events only, optimistic update, `computeOrder`, call `PATCH /api/cards/<id>/position`, replace the Card with the response, `router.refresh()` when `rebalanced`, restore the original `column_id` and `order` and show the error toast on any `ApiError` (403, 409, status 0), reset state when a new `initialBoard` arrives (FE-26).
     - Tests with a mocked failing request asserting state equals the pre-drop state.
     - Files: frontend/hooks/useDragAndDrop.ts, frontend/__tests__/useDragAndDrop.test.tsx
     - _Requirements: 7.16, 7.17, 7.18, 7.19, 7.20, 28.3_
-  - [~] 17.6 Implement useCardSearch with tests (T-61)
+  - [x] 17.6 Implement useCardSearch with tests (T-61)
     - `hooks/useCardSearch.ts` composing `useDebouncedValue` (`SEARCH_DEBOUNCE_MS = 300`) with `GET /api/cards?q=<term>&board_id=<id>`; no request for empty or whitespace input; ignore a stale response (FE-29). Fake-timer tests: 299 ms none, 300 ms one request.
     - Files: frontend/hooks/useCardSearch.ts, frontend/__tests__/useCardSearch.test.tsx
     - _Requirements: 10.10, 10.11_

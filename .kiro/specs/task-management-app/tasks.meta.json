@@ -113,6 +113,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795764966933
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795767473316
       }
     ],
     "3.3 Set up Flask-Migrate and create the initial migration (T-08)": [
@@ -120,6 +125,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759744922
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795767477907
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795768144219
       }
     ],
     "3.4 Write schema, constraint and relationship tests on PostgreSQL (T-09)": [
@@ -127,6 +142,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759744994
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795768364195
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795768678659
       }
     ],
     "4.1 Implement the guard decorators and JWT error callbacks (T-10)": [
@@ -134,6 +159,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745106
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769196964
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769561660
       }
     ],
     "4.2 Write table-driven tests for every Access Resolution Table step (T-11)": [
@@ -141,6 +176,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745175
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769562207
       }
     ],
     "5.1 Implement the auth Blueprint (register and login) (T-13)": [
@@ -444,6 +484,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795764967432
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795767473219
       }
     ],
     "17.5 Implement useDragAndDrop with tests (T-60)": [
@@ -451,6 +496,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759747860
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795768685191
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795768864108
       }
     ],
     "17.6 Implement useCardSearch with tests (T-61)": [
@@ -458,6 +513,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759747933
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795768870307
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769193092
       }
     ],
     "18.1 Build the /register and /login pages with tests (T-62)": [
@@ -626,6 +691,20 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795763878026
+      }
+    ],
+    "3. Database models, migrations and schema tests": [
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795768678781
+      }
+    ],
+    "17. Shared components and hooks": [
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769193182
       }
     ]
   }
