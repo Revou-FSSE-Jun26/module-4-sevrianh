@@ -181,6 +181,11 @@
         "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795769562207
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769922228
       }
     ],
     "5.1 Implement the auth Blueprint (register and login) (T-13)": [
@@ -188,6 +193,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745241
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795770621648
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795770999265
       }
     ],
     "5.2 Write auth service and route tests (T-14)": [
@@ -195,6 +210,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745309
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795770999401
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771081929
       }
     ],
     "6.1 Implement the users Blueprint (profile) (T-16)": [
@@ -202,6 +227,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745380
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771082345
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771288447
       }
     ],
     "6.2 Write users service and route tests (T-17)": [
@@ -209,6 +244,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745455
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771296616
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771977847
       }
     ],
     "7. Checkpoint - foundation, auth and users": [
@@ -216,6 +261,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745524
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771978313
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795772045273
       }
     ],
     "8.1 Implement board services, Team access helpers and board routes (T-18)": [
@@ -223,6 +278,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745595
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795772055768
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795772221484
       }
     ],
     "8.2 Implement Team member management routes and services (T-19)": [
@@ -230,6 +295,11 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759745666
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795772222026
       }
     ],
     "8.4 Implement Invite Link create and revoke (T-21)": [
@@ -530,6 +600,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759748017
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769928413
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795770383245
       }
     ],
     "18.2 Build Header and NotificationBell and mount them in the layout (T-63)": [
@@ -537,6 +617,16 @@
         "executionId": "cf46281b-e2c2-4a0a-b254-138e8786935b",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795759748091
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795770395090
+      },
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795770621202
       }
     ],
     "18.3 Build the Dashboard page with BoardCard and BoardForm (T-64)": [
@@ -705,6 +795,27 @@
         "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
         "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
         "timestamp": 1795769193182
+      }
+    ],
+    "4. Access guards": [
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795769922380
+      }
+    ],
+    "5. Auth Blueprint": [
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771082022
+      }
+    ],
+    "6. Users Blueprint": [
+      {
+        "executionId": "009ca858-d4d9-4a6e-ba21-2a364b19e1f9",
+        "chatSessionId": "sess_24790358-1dd8-4565-984c-3c70857bc356",
+        "timestamp": 1795771977959
       }
     ]
   }

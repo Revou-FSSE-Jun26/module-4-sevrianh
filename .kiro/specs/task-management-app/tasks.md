@@ -63,13 +63,13 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/tests/conftest.py, backend/tests/unit/boards/test_schema_models.py, backend/tests/unit/cards/test_schema_constraints.py
     - _Requirements: 6.8, 16.3, 24.1, 26.1, 26.2, 26.3, 26.4, 26.6, 26.7, 26.9, 26.10, 26.11, 26.12_
 
-- [ ] 4. Access guards
+- [x] 4. Access guards
   - [x] 4.1 Implement the guard decorators and JWT error callbacks (T-10)
     - `app/utils/auth.py`: `@token_required` (passes `current_user` first) and `@board_access_required(allow_guest_read=True)` (passes the `access` object first) implementing the eight-step Access Resolution Table of BE-08 exactly, including UUID path validation after authentication (BE-04) and invite token lookup by hash.
     - Register the Flask-JWT-Extended callbacks (`unauthorized_loader`, `invalid_token_loader`, `expired_token_loader`, `token_verification_failed_loader`) in `register_error_handlers` so every token failure is the 401 envelope, never 422 (BE-13).
     - Files: backend/app/utils/auth.py, backend/app/error_handlers.py
     - _Requirements: 1.1, 1.2, 1.3, 1.6, 1.7, 2.1, 3.3, 3.4, 3.5, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.15, 8.5, 13.8, 13.9, 13.12, 13.13, 13.14, 20.12_
-  - [-] 4.2 Write table-driven tests for every Access Resolution Table step (T-11)
+  - [x] 4.2 Write table-driven tests for every Access Resolution Table step (T-11)
     - Use a test-only app fixture that registers one `@token_required` route and one Guest route (the real routes come later) and seeds Teams, Boards, Cards, memberships and invite links.
     - Cases (BE-08 verify): valid Guest token 200 read-only; invalid, revoked and empty token 404 `Not found`; bad or expired JWT with a valid token 401; no JWT and no token 401; non-member JWT without token 403 generic; token of another Board 403 generic; member with an invalid or foreign token 200; missing Board and soft-deleted Card 404 generic; token-only request to a protected route 401; malformed token, expired token and missing token on a protected route are all 401, never 422.
     - Files: backend/tests/unit/boards/test_access_resolution_table.py
@@ -82,14 +82,14 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/tests/unit/boards/test_boards_properties.py
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14_
 
-- [ ] 5. Auth Blueprint
-  - [~] 5.1 Implement the auth Blueprint (register and login) (T-13)
+- [x] 5. Auth Blueprint
+  - [x] 5.1 Implement the auth Blueprint (register and login) (T-13)
     - `RegisterSchema` (username 3-30, normalised to lowercase) and `LoginSchema` with `unknown=RAISE` (BE-05); `UserSchema` output (BE-06).
     - `register_service`: user, personal Team (`is_personal` true, `owner_id` = the user) and `admin` membership in one transaction; case-insensitive duplicate username and email give 409, also on a concurrent unique violation (BE-13, BE-15). `login_service` returns `access_token`, `token_type`, `expires_in` 3600 and `user`, with the identical 401 for unknown email and wrong password.
     - Routes `POST /api/auth/register` and `POST /api/auth/login` (public, handlers at most 5 lines, BE-02) and `auth_bp` registration hook.
     - Files: backend/app/blueprints/auth/__init__.py, backend/app/blueprints/auth/schema.py, backend/app/blueprints/auth/service.py, backend/app/blueprints/auth/routes.py, backend/app/__init__.py
     - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.10, 13.11, 20.9, 26.5_
-  - [~] 5.2 Write auth service and route tests (T-14)
+  - [x] 5.2 Write auth service and route tests (T-14)
     - Success and failure test per service function; routes: 201, 400, 409, 200, 401; atomicity (forced failure after the user insert leaves no user, Team or membership); `exp - iat == 3600`; no key beginning with `password` in any response; case-insensitive duplicates; unknown field 400.
     - Files: backend/tests/unit/auth/test_auth_service.py, backend/tests/unit/auth/test_auth_routes.py
     - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.10, 13.11, 13.12, 26.5, 28.1_
@@ -101,26 +101,26 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/tests/unit/auth/test_auth_properties.py
     - _Requirements: 13.1, 13.3, 26.12_
 
-- [ ] 6. Users Blueprint
-  - [~] 6.1 Implement the users Blueprint (profile) (T-16)
+- [x] 6. Users Blueprint
+  - [x] 6.1 Implement the users Blueprint (profile) (T-16)
     - `UserUpdateSchema` (`name` 1-100, `email` valid, at least one required; `password`, `password_hash`, `username` and any other field rejected); `get_current_user_service` and `update_current_user_service` (case-insensitive email conflict 409); routes `GET /api/users/me` and `PATCH /api/users/me`.
     - Files: backend/app/blueprints/users/__init__.py, backend/app/blueprints/users/schema.py, backend/app/blueprints/users/service.py, backend/app/blueprints/users/routes.py, backend/app/__init__.py
     - _Requirements: 19.1, 19.2, 19.3, 19.4, 19.5, 19.6, 20.9_
-  - [~] 6.2 Write users service and route tests (T-17)
+  - [x] 6.2 Write users service and route tests (T-17)
     - Success and failure per service function; 200, 400 (empty body, forbidden fields, invalid email), 401, 409; response has exactly `id`, `name`, `username`, `email`, `created_at`.
     - Files: backend/tests/unit/users/test_users_service.py, backend/tests/unit/users/test_users_routes.py
     - _Requirements: 19.1, 19.2, 19.3, 19.4, 19.5, 19.6, 28.1_
 
-- [~] 7. Checkpoint - foundation, auth and users
+- [x] 7. Checkpoint - foundation, auth and users
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 8. Boards Blueprint, Team members and Invite Links
-  - [~] 8.1 Implement board services, Team access helpers and board routes (T-18)
+  - [x] 8.1 Implement board services, Team access helpers and board routes (T-18)
     - `boards/service.py`: `require_team_member_service` and `require_team_admin_service` (BE-09), create (default personal Team, `team_id` of a Team the requester does not administer gives 403 generic, see D-01), list (filtered through memberships, newest first), get, update, delete (database cascade, returns the id).
     - `BoardCreateSchema`, `BoardUpdateSchema`, `BoardDetailSchema` nesting Columns then Cards in `order` ascending (BE-06); `GET /api/boards/<id>` uses the Guest guard and loads Board, Columns and Cards in at most 3 SQL queries; routes for the five board endpoints.
     - Files: backend/app/blueprints/boards/__init__.py, backend/app/blueprints/boards/schema.py, backend/app/blueprints/boards/service.py, backend/app/blueprints/boards/routes.py, backend/app/__init__.py
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.3, 2.6, 2.7, 3.3, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 14.2, 20.5, 26.4_
-  - [~] 8.2 Implement Team member management routes and services (T-19)
+  - [-] 8.2 Implement Team member management routes and services (T-19)
     - `MemberAddSchema`, `MemberRoleUpdateSchema`; add (404 `User not found`, 409 duplicate), list, change role, remove (keeps authored Cards and Comments, sets `assignee_id` to null on that user's non-deleted Cards of the Team's Boards, returns the user id); last Admin cannot be removed or demoted (409); the Admin check runs before the email, membership or role is evaluated (BE-09).
     - API only: no Frontend screen (OD-14).
     - Files: backend/app/blueprints/boards/schema.py, backend/app/blueprints/boards/service.py, backend/app/blueprints/boards/routes.py
@@ -380,12 +380,12 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - _Requirements: 10.10, 10.11_
 
 - [ ] 18. Pages and feature components
-  - [~] 18.1 Build the /register and /login pages with tests (T-62)
+  - [x] 18.1 Build the /register and /login pages with tests (T-62)
     - Controlled forms inside the page layout with client-side validation mirroring BE-05 (email, password at least 8, username 3-30 of letters, digits, underscore, non-empty name); register redirects to `/login` on 201; login calls `login()` with `access_token` and `user` and redirects to `/`; invalid credentials show "Invalid credentials" inline and no session-expired toast.
     - RTL tests for validation messages, redirects and the inline error.
     - Files: frontend/app/register/page.tsx, frontend/app/login/page.tsx, frontend/__tests__/auth-pages.test.tsx
     - _Requirements: 13.4, 21.6, 21.7, 21.8, 21.9, 22.6_
-  - [~] 18.2 Build Header and NotificationBell and mount them in the layout (T-63)
+  - [x] 18.2 Build Header and NotificationBell and mount them in the layout (T-63)
     - `components/layout/Header.tsx` (brand, links to `/`, `/my-tasks`, `/profile`, logout `BaseButton`) and `components/notifications/NotificationBell.tsx` (badge with `unread_count`, hidden at 0, no fetch before the first 30-second interval (FE-28), items link to `/boards/<board_id>?card=<card_id>` and mark read, see U-10); show both on every authenticated page and only the brand in Guest mode.
     - RTL tests: badge shows `unread_count` not `items.length`, hidden at 0, the item `href` is `/boards/<board_id>?card=<card_id>`.
     - Files: frontend/components/layout/Header.tsx, frontend/components/notifications/NotificationBell.tsx, frontend/app/layout.tsx, frontend/__tests__/NotificationBell.test.tsx

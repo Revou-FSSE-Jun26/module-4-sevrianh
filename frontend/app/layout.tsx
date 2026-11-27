@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
+import Header from '@/components/layout/Header';
 import { cookies } from 'next/headers';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
@@ -29,6 +30,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html lang="en">
       <body>
         <AuthProvider initialToken={initialToken} initialUser={initialUser}>
+          <Suspense fallback={null}>
+            <Header />
+          </Suspense>
           {children}
         </AuthProvider>
         <Toaster />

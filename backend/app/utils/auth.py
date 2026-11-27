@@ -6,7 +6,7 @@ from functools import wraps
 from typing import Any, Callable, Optional
 
 from flask import request
-from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_jwt_extended import create_access_token, get_jwt_identity, verify_jwt_in_request
 from marshmallow import ValidationError
 
 from app.exceptions import (
@@ -42,6 +42,11 @@ class Access:
 def hash_invite_token(raw_token: str) -> str:
     """Return the SHA-256 hex digest stored in `invite_links.token_hash`."""
     return hashlib.sha256(raw_token.encode('utf-8')).hexdigest()
+
+
+def issue_access_token(user_id: str) -> str:
+    """Create a JWT whose identity is the user UUID string (BE-13)."""
+    return create_access_token(identity=user_id)
 
 
 def _validate_path_uuids(kwargs: dict[str, Any]) -> None:
@@ -172,6 +177,7 @@ __all__ = [
     'Access',
     'board_access_required',
     'hash_invite_token',
+    'issue_access_token',
     'resolve_board_access',
     'token_required',
 ]
