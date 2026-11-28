@@ -7,7 +7,7 @@ fileMatchPattern: "frontend/{app,components,hooks,context,lib,types}/**/*"
 
 Frontend guidelines for **Sevy**: Next.js 15 App Router, React 19, TypeScript (strict), Tailwind CSS 4.
 Six sections: **Component Structure · Naming Conventions · Styling Standards · State Management · Pages, Token Transport and API Client · Board and Feature Interactions**.
-Every guideline has **RULE**, **RATIONALE**, and **EXAMPLE**; FE-22 to FE-32 (and the test line added to FE-19) also have a **VERIFY** line (command, test, or count, run from the repository root). IDs are `FE-nn` (FE-01 to FE-32).
+Every guideline has **RULE**, **RATIONALE**, and **EXAMPLE**; FE-22 to FE-33 (and the test line added to FE-19) also have a **VERIFY** line (command, test, or count, run from the repository root). IDs are `FE-nn` (FE-01 to FE-33).
 Ownership: this file owns Next.js pages, components, client state, UI interactions, the frontend API client (`lib/apiClient.ts`, `lib/errors.ts`, `lib/toast.ts`, `lib/ordering.ts`), token transport (cookie `sevy_token`), route protection (`middleware.ts`), `AuthContext`, drag-and-drop, polling, debounce, error-to-toast mapping, the TypeScript API types, and responsive behavior. FE-22 to FE-31 absorb the frontend rules formerly in `tech.md` TC-11 (client part) and TC-12 to TC-16; `tech.md` is to be reduced to a reference for them, and until then this file is the owner.
 Complements `tech.md` (runtime, dependencies, style tooling, deployment, environment, test tooling), `structure.md` (repository layout, import boundaries, size limits, naming), `backend.md` (API contracts: response shapes, status and body policy, the Access Resolution Table, the 400 error string, FLOAT order allocation) and `database.md` (tables and constraints). Those rules are referenced here, not repeated.
 
@@ -31,7 +31,7 @@ function CardItem({ card, onCardOpen }: CardItemProps) { /* ... */ }
 
 ### FE-02 — Fixed folder structure
 - **RULE:** `frontend/components/` has exactly six folders, and a component lives in the folder of the feature that owns it:
-  `board/` (KanbanBoard, BoardColumn, ColumnHeader, CardDragHandle, BoardCard = a board's summary tile on the Dashboard, BoardForm, ColumnForm) ·
+  `board/` (KanbanBoard, BoardColumn, ColumnHeader, CardDragHandle, BoardCard = a board's summary tile on the Dashboard, BoardForm, ColumnForm, AnalyticsPanel = the admin-only analytics panel, `components/board/AnalyticsPanel.tsx`, FE-33) ·
   `card/` (CardItem = a card inside a column, CardDetailModal, CardForm, CardSearch, MyTaskRow = one assigned-Card row on `/my-tasks`) ·
   `comments/` (CommentList, CommentItem, CommentForm) ·
   `notifications/` (NotificationBell) ·
@@ -440,3 +440,13 @@ export interface NotificationPage {
 - **RATIONALE:** The requirements define these as API features only; UI for them would be unrequested scope.
 - **EXAMPLE:** An Admin adds a member through `POST /api/boards/<id>/members` with an API client; no screen in `app/` exists for it.
 - **VERIFY:** `grep -rniE "member panel|MemberForm|InviteLink" frontend/app frontend/components | wc -l` → `0`; `ls frontend/components` lists exactly the six folders of FE-02.
+
+### FE-33 — Board Detail role, analytics panel and Board creation
+- **RULE:**
+  - **Role source:** the Board payload carries no role. `app/boards/[id]/page.tsx` reads the signed-in user's role from `GET /api/boards/<id>/members`, taking the row whose `user_id` equals the user's own id, and passes `role` to Client Components.
+  - **Guest_Mode:** the role is `guest` and the page makes no members request (a Guest has no JWT; FE-30).
+  - **AnalyticsPanel:** `components/board/AnalyticsPanel.tsx` renders only when `role` is `admin` and calls `GET /api/boards/<id>/analytics`; for `member` and `guest` it is not rendered and the request is not made.
+  - **Board creation:** `BoardForm` sends no `team_id`, so a Board created in the UI belongs to the requester's personal Team. The Dashboard lists the Boards of all Teams of the user.
+- **RATIONALE:** No route lists Teams and the Board payload has no role field; the members route is the one source of the user's role, and a Guest has no JWT to call it with.
+- **EXAMPLE:** An Admin opens `/boards/<id>`: the members response has a row with their `user_id` and role `admin`, and the analytics panel appears. A Member sees no panel. The Guest view at `/boards/<id>?invite=<token>` sends no members request.
+- **VERIFY:** (not run) RTL test: `AnalyticsPanel` is rendered for role `admin` and absent for `member` and `guest`. Jest test with a `fetch` spy: Guest_Mode sends no request to `/members`; a signed-in page sends one and derives the role from the row with the user's own `user_id`. `grep -rn "team_id" frontend/components/board/BoardForm.tsx | wc -l` → `0`. `ls frontend/components/board | grep -c "AnalyticsPanel.tsx"` → `1`.

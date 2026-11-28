@@ -494,3 +494,38 @@
 **Known open items**
 - Open decisions, not changed because the spec is silent or permits the behavior: a whitespace-only user `name` is accepted at registration; an email-style token such as `x@bob.com` notifies the member `bob` (R9, OD-05 define no word boundary).
 - PERF-01 on the deployed Railway API and the mixed read and write load (PERF-02) are not done.
+
+## V11 - 2026-11-28
+**Prompt**: The user asked for `tasks.md` to be updated in place and this entry to be appended after the V11 changes to `requirements.md`, `design.md` (D-01 and D-04 to D-08 approved, D-07 adds `pg_trgm` and `ix_cards_title_lower_trgm`), `database.md` (DB-09), `backend.md` (BE-05, BE-14, BE-15) and `frontend.md` (FE-02, new FE-33). No task status, T-NN id, criterion reference, property task or route coverage was to change, and no new OD- or A- entry was to be added.
+**Before** (V10 tasks):
+- `tasks.md`: 1275 lines, 80 leaf tasks (T-01 to T-80), 16 optional property tasks, 307 criterion rows in the coverage table, 32 routes covered, 87 checked and 16 unchecked-optional checklist items.
+- R26.3 (title-search index) recorded as unmet (U-03); D-01, D-04 to D-08 listed under "Depends on a user decision"; `AnalyticsPanel.tsx` flagged as not listed in FE-02 or ST-07 (ambiguity A-FE).
+**After** (V11 tasks):
+- `tasks.md`: 1285 lines, 80 leaf tasks (none added, removed or renumbered), 16 optional property tasks with unchanged Validates lines, 307 criterion rows, 32 routes covered, 87 checked and 16 unchecked-optional checklist items (no status changed). `design.md`: 811 lines; `requirements.md`: 1159 lines (counted from the files).
+- R26.3 is no longer recorded as unmet: tasks 3.3, 3.4 and 10.8 cover it. The "Depends on a user decision" table lost seven rows (U-03, U-07 / D-01, D-04 to D-08 as listed there); they are now in a new "Approved decisions (V11)" section.
+### Changes
+**Specification changes**
+- `requirements.md` changed only in OD-02, the Validation Rules of Requirement 4 and Requirement 9, and the Introduction; no requirement or criterion was added, removed or renumbered.
+**Design changes**
+- `design.md`: D-01, D-04, D-05, D-06, D-07 and D-08 approved by the user; D-07 adds the `pg_trgm` extension and the GIN index `ix_cards_title_lower_trgm` on `lower(title) gin_trgm_ops`.
+- Synchronized outside the spec folder: `database.md` (DB-09), `backend.md` (BE-05, BE-14, BE-15), `frontend.md` (FE-02, new FE-33), `structure.md` and `tech.md` TC-10.
+**Task changes** (`tasks.md`, no renumbering, no status change)
+- 3.2, 3.3: the migration runs `CREATE EXTENSION IF NOT EXISTS pg_trgm` and creates `ix_cards_title_lower_trgm` with `op.execute`; if `flask db check` reports the index, it is also declared in the model with `db.Index(..., postgresql_using='gin')`.
+- 3.4: `conftest.py` creates the extension before `create_all`; `pg_indexes` checks for the 12 foreign-key indexes and the trigram index (GIN, `gin_trgm_ops`); `pg_extension` check for `pg_trgm`.
+- 8.1, 8.5: non-existent `team_id` in `POST /api/boards` gives 403 with the Generic_Denial_Body (D-01) and a test; query-budget test counts the Columns query plus the Cards query (D-06).
+- 10.1: `update_card_service` with `with_for_update` in one transaction (D-05). 10.8: `lower(title) LIKE` with `\`, `%` and `_` escaped (D-07); 10.10: literal `%`, `_` and `\` tests; R26.3 covered by 3.3, 3.4 and 10.8.
+- 11.1, 11.5: notification message text approved (D-08). 18.4, 18.7: role source and `AnalyticsPanel` reference FE-33 and FE-02; the A-FE flags were removed.
+- Coverage: R26.3 now lists 3.3, 3.4, 10.8. "Manual steps" gained a first-deploy check that `pg_trgm` can be created on the Railway database.
+**Implementation changes**
+- None in this entry.
+**Bug fixes**
+- None.
+**Breaking changes**
+- None.
+### Reason
+- The user approved the open design decisions, and the plan had to follow them and stop reporting R26.3 as unmet.
+### Impact
+- **Affected requirements:** OD-02, Requirement 4 and Requirement 9 Validation Rules, Introduction; R4.4, R9.6, R10.1, R11.11, R14.2, R15.3, R26.3 are served by the updated tasks.
+- **Affected design components:** D-01, D-04 to D-08.
+- **Affected tasks:** 3.1 to 3.4, 8.1, 8.5, 10.1, 10.8, 10.10, 11.1, 11.5, 18.4, 18.7, Notes, "Approved decisions (V11)", "Manual steps outside the task list", coverage row R26.3.
+- **Not run:** no test, migration, check or deployment was run for this entry. The availability of `pg_trgm` on Railway is NOT confirmed.

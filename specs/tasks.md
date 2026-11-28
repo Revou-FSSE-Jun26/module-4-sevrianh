@@ -2,7 +2,7 @@
 
 ## Overview
 
-This plan implements Sevy from requirements.md (V9) and design.md in dependency order: backend scaffold, core utilities, database, access guards, the eight Blueprints, backend integration, then the Next.js frontend, Playwright suite and repository documents. Guideline rules are referenced by ID (`BE-nn`, `DB-nn`, `FE-nn`, `TC-nn`, `ST-nn`), not restated. No application code, migration or test exists yet, and no task in this list has been run.
+This plan implements Sevy from requirements.md (V11) and design.md (D-01 and D-04 to D-08 approved, V11) in dependency order: backend scaffold, core utilities, database, access guards, the eight Blueprints, backend integration, then the Next.js frontend, Playwright suite and repository documents. Guideline rules are referenced by ID (`BE-nn`, `DB-nn`, `FE-nn`, `TC-nn`, `ST-nn`), not restated. No application code, migration or test exists yet, and no task in this list has been run.
 
 ## Tasks
 
@@ -44,22 +44,22 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
 - [x] 3. Database models, migrations and schema tests
   - [x] 3.1 Create Entity models for users, teams, memberships, boards and columns (T-06)
     - One model per file with the DB-05 required columns, DB-09 domain columns, DB-11 `ondelete` policy, named constraints and indexes (`uq_users_username`, `ck_users_username_format`, `uq_users_email_lower`, `uq_teams_owner_id_personal`, `uq_team_memberships_team_id_user_id`, `ck_team_memberships_role`, the DB-08 column order index and check) and the foreign-key indexes of design section 5.2 for these tables: `ix_team_memberships_user_id`, `ix_teams_owner_id`, `ix_boards_team_id`.
-    - Relationships per the DB-12 catalog (both sides, explicit `backref`, `lazy`, `order_by`, `foreign_keys`). Columns are hard-deleted: never write `deleted_at` on `board_columns` (see U-01 in "Depends on a user decision").
+    - Relationships per the DB-12 catalog (both sides, explicit `backref`, `lazy`, `order_by`, `foreign_keys`). Columns are hard-deleted: never write `deleted_at` on `board_columns` (see U-01 in "Depends on a user decision"). The trigram index `ix_cards_title_lower_trgm` is declared in `CardEntity` (task 3.2) only if `flask db check` reports it (see 3.3).
     - Files: backend/app/models/user.py, backend/app/models/team.py, backend/app/models/team_membership.py, backend/app/models/board.py, backend/app/models/board_column.py, backend/app/models/__init__.py
     - _Requirements: 24.1, 26.1, 26.6, 26.7, 26.9, 26.12_
   - [x] 3.2 Create Entity models for cards, comments, notifications, activity events and invite links (T-07)
     - `CardEntity` per the DB-08 complete example (FLOAT `order`, `ck_cards_order_positive`, `ix_cards_column_id_order`, partial unique `uq_cards_column_id_order_active`), `CardCommentEntity` (`parent_comment_id`, `deleted_at` is the only tombstone marker), `NotificationEntity` (`recipient_id`, `comment_id`, no `user_id`, no `card_id`), `ActivityEventEntity` (`ck_activity_events_event_type` with the five event types), `InviteLinkEntity` (`token_hash`, `revoked_at`).
-    - Foreign-key indexes of design section 5.2 for these tables: `ix_cards_assignee_id`, `ix_cards_created_by_id`, `ix_card_comments_card_id`, `ix_card_comments_author_id`, `ix_card_comments_parent_comment_id`, `ix_notifications_comment_id`, `ix_activity_events_actor_id`, `ix_invite_links_board_id`, `ix_invite_links_created_by_id`. No title-search index is created (design D-07 is not approved, see U-03).
+    - Foreign-key indexes of design section 5.2 for these tables: `ix_cards_assignee_id`, `ix_cards_created_by_id`, `ix_card_comments_card_id`, `ix_card_comments_author_id`, `ix_card_comments_parent_comment_id`, `ix_notifications_comment_id`, `ix_activity_events_actor_id`, `ix_invite_links_board_id`, `ix_invite_links_created_by_id`. The title-search trigram index `ix_cards_title_lower_trgm` (design D-07, approved V11) is created by the migration in task 3.3; if `flask db check` reports it as a difference, declare it in `CardEntity.__table_args__` with `db.Index('ix_cards_title_lower_trgm', db.text('lower(title) gin_trgm_ops'), postgresql_using='gin')` (DB-09).
     - Remaining DB-12 relationships and DB-11 delete behavior; register all ten models in `models/__init__.py`.
     - Files: backend/app/models/card.py, backend/app/models/card_comment.py, backend/app/models/notification.py, backend/app/models/activity_event.py, backend/app/models/invite_link.py, backend/app/models/__init__.py
     - _Requirements: 3.2, 6.8, 24.1, 26.1, 26.2, 26.6, 26.7, 26.10, 26.11_
   - [x] 3.3 Set up Flask-Migrate and create the initial migration (T-08)
-    - Initialise `backend/migrations/` and generate the first revision creating all ten tables, every named CHECK constraint, the three partial unique indexes `uq_cards_column_id_order_active`, `uq_board_columns_board_id_order_active`, `uq_teams_owner_id_personal` by name (TC-10), and the 12 foreign-key indexes of design section 5.2 named `ix_<table>_<column>` (`ix_team_memberships_user_id`, `ix_teams_owner_id`, `ix_boards_team_id`, `ix_cards_assignee_id`, `ix_cards_created_by_id`, `ix_card_comments_card_id`, `ix_card_comments_author_id`, `ix_card_comments_parent_comment_id`, `ix_notifications_comment_id`, `ix_activity_events_actor_id`, `ix_invite_links_board_id`, `ix_invite_links_created_by_id`). No title-search index and no `pg_trgm` extension is created (D-07, U-03). Review the generated file by hand; `db.create_all()` is not used outside test fixtures.
+    - Initialise `backend/migrations/` and generate the first revision creating all ten tables, every named CHECK constraint, the three partial unique indexes `uq_cards_column_id_order_active`, `uq_board_columns_board_id_order_active`, `uq_teams_owner_id_personal` by name (TC-10), and the 12 foreign-key indexes of design section 5.2 named `ix_<table>_<column>` (`ix_team_memberships_user_id`, `ix_teams_owner_id`, `ix_boards_team_id`, `ix_cards_assignee_id`, `ix_cards_created_by_id`, `ix_card_comments_card_id`, `ix_card_comments_author_id`, `ix_card_comments_parent_comment_id`, `ix_notifications_comment_id`, `ix_activity_events_actor_id`, `ix_invite_links_board_id`, `ix_invite_links_created_by_id`). The same revision first runs `op.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")` and then creates the GIN index `ix_cards_title_lower_trgm` on `lower(title) gin_trgm_ops` with `op.execute` (raw SQL, since it is an expression index; D-07, DB-09, TC-10, R26.3); the downgrade drops the index. If `flask db check` reports the index as a difference, also declare it in the model with `db.Index('ix_cards_title_lower_trgm', db.text('lower(title) gin_trgm_ops'), postgresql_using='gin')` so model and migration agree. Whether `pg_trgm` can be created on the Railway database is not confirmed; see "Manual steps outside the task list". Review the generated file by hand; `db.create_all()` is not used outside test fixtures.
     - Files: backend/migrations/ (env.py, alembic.ini, versions/<initial revision>.py)
     - _Requirements: 16.3, 26.3, 26.4, 26.7_
   - [x] 3.4 Write schema, constraint and relationship tests on PostgreSQL (T-09)
-    - `tests/conftest.py` using a separate PostgreSQL database `sevy_test` (never SQLite, TC-10) with app, client and factory fixtures.
-    - Implement the DB-09 and DB-08 verify bullets: expected table set, column lists, no Board-level membership table, no `is_deleted` column, no `user_id`/`card_id` on notifications, username and email constraints, partial index metadata and behavior (duplicate active order rejected, soft-deleted order does not block), every one of the 12 foreign-key indexes of design section 5.2 exists by name and no title-search index exists, personal Team uniqueness, `test_relationships_both_sides`, DB-11 delete behavior (Board delete cascades, membership delete keeps authored work).
+    - `tests/conftest.py` using a separate PostgreSQL database `sevy_test` (never SQLite, TC-10) with app, client and factory fixtures; the fixture runs `CREATE EXTENSION IF NOT EXISTS pg_trgm` before `db.create_all()` so the trigram index can be built (DB-09).
+    - Implement the DB-09 and DB-08 verify bullets: expected table set, column lists, no Board-level membership table, no `is_deleted` column, no `user_id`/`card_id` on notifications, username and email constraints, partial index metadata and behavior (duplicate active order rejected, soft-deleted order does not block), every one of the 12 foreign-key indexes of design section 5.2 exists by name (`pg_indexes`), `ix_cards_title_lower_trgm` exists with an `indexdef` containing `USING gin` and `gin_trgm_ops` (`pg_indexes`), `pg_trgm` is listed in `pg_extension` after `flask db upgrade` on an empty database, personal Team uniqueness, `test_relationships_both_sides`, DB-11 delete behavior (Board delete cascades, membership delete keeps authored work).
     - Files: backend/tests/conftest.py, backend/tests/unit/boards/test_schema_models.py, backend/tests/unit/cards/test_schema_constraints.py
     - _Requirements: 6.8, 16.3, 24.1, 26.1, 26.2, 26.3, 26.4, 26.6, 26.7, 26.9, 26.10, 26.11, 26.12_
 
@@ -116,7 +116,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
 
 - [x] 8. Boards Blueprint, Team members and Invite Links
   - [x] 8.1 Implement board services, Team access helpers and board routes (T-18)
-    - `boards/service.py`: `require_team_member_service` and `require_team_admin_service` (BE-09), create (default personal Team, `team_id` of a Team the requester does not administer gives 403 generic, see D-01), list (filtered through memberships, newest first), get, update, delete (database cascade, returns the id).
+    - `boards/service.py`: `require_team_member_service` and `require_team_admin_service` (BE-09), create (default personal Team; a `team_id` of a Team the requester does not administer, or of a Team that does not exist, gives 403 with the Generic_Denial_Body `{"error": "Not found or access denied"}` via `TeamAccessDeniedError`, an exception to OD-02 approved in V11, D-01, R4.4), list (filtered through memberships, newest first), get, update, delete (database cascade, returns the id).
     - `BoardCreateSchema`, `BoardUpdateSchema`, `BoardDetailSchema` nesting Columns then Cards in `order` ascending (BE-06); `GET /api/boards/<id>` uses the Guest guard and loads Board, Columns and Cards in at most 3 SQL queries; routes for the five board endpoints.
     - Files: backend/app/blueprints/boards/__init__.py, backend/app/blueprints/boards/schema.py, backend/app/blueprints/boards/service.py, backend/app/blueprints/boards/routes.py, backend/app/__init__.py
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.3, 2.6, 2.7, 3.3, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 14.2, 20.5, 26.4_
@@ -138,7 +138,8 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - _Requirements: 2.3, 2.6, 3.1, 3.2, 3.6, 3.7_
   - [x] 8.5 Write boards service, route and permission-matrix tests (T-22)
     - Success and failure test per service function; route tests for 200/201/400/401/403/404/409 across the board, member and invite endpoints; table-driven permission test (`-k permission`) with one case per applicable cell of the Requirement 2 table for each role, cross-Team denial for Board ids, 404 before 403, non-Admin member management 403 before the email lookup, revoked-link read 404, link of Board A gives nothing on Board B, Guest write attempts change no data.
-    - Query budget (R14.2, design D-06): loading the Columns and Cards of `GET /api/boards/<id>` with 5 Columns and 50 Cards takes at most 3 queries (one for Columns, one for non-deleted Cards with the Assignee joined in the same query), and no query runs per Column or per Card; the guard's Board and membership lookups are counted separately.
+    - Query budget (R14.2, design D-06, approved V11): the test counts the Columns query plus the Cards query (Assignee joined in the same query, non-deleted Cards only) when `GET /api/boards/<id>` loads 5 Columns and 50 Cards and asserts at most 3 queries, with no query per Column or per Card; the guard's Board and membership lookups are counted separately.
+    - D-01 test (R4.4, approved V11): `POST /api/boards` with a non-existent `team_id` answers 403 with the Generic_Denial_Body `{"error": "Not found or access denied"}`, identical to the answer for an existing Team the requester does not administer, and creates no Board.
     - Files: backend/tests/unit/boards/test_boards_service.py, backend/tests/unit/boards/test_boards_routes.py, backend/tests/unit/boards/test_permission_matrix.py
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.9, 3.1, 3.2, 3.6, 3.7, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8, 12.9, 12.10, 14.2, 28.1_
   - [ ]* 8.6 Write property test for Property 5: Role monotonicity and determinism (T-23)
@@ -172,7 +173,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
   - [x] 10.1 Implement card create, update and soft delete (T-27)
     - `CardCreateSchema`, `CardUpdateSchema` (`column_id`, `order`, `deleted_at`, `completed_at` rejected), `CardSchema` output; create appends and sets `completed_at` in a done Column; assignee must be a Team member else 400 `Assignee must be a Team member`, null clears the Assignee.
     - Soft delete sets only the Card's `deleted_at`, never touches Comments, Notifications or activity rows; Admin deletes any Card, a Member only own Cards (`AdminAccessRequiredError`, see U-08); every Card-id route answers a soft-deleted Card with 404 generic before membership checks.
-    - `update_card_service` loads the Card with `with_for_update` inside one transaction, applies the request and commits, so two simultaneous PATCH requests are applied one after the other (design section 9, R15.3, D-05).
+    - `update_card_service` loads the Card with `with_for_update` inside one transaction, applies the request and commits, so two simultaneous PATCH requests are applied one after the other (design section 9, R15.3, D-05, approved V11); the Activity_Event is written in the same transaction.
     - Exactly one `card_created`, `card_updated` or `card_deleted` Activity_Event per successful request in the same transaction, none for a rejected one (BE-15).
     - Files: backend/app/blueprints/cards/__init__.py, backend/app/blueprints/cards/schema.py, backend/app/blueprints/cards/service.py, backend/app/blueprints/cards/routes.py, backend/app/__init__.py
     - _Requirements: 2.4, 2.6, 2.9, 6.1, 6.3, 6.4, 6.5, 6.6, 6.7, 6.9, 6.11, 6.13, 6.14, 6.15, 6.16, 15.3, 18.1, 18.2, 18.3, 18.4, 18.12, 24.3_
@@ -219,8 +220,9 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - _Requirements: 7.11_
   - [x] 10.8 Implement the card list route for search and My Tasks (T-34)
     - `CardListQuerySchema` (`assignee=me`, `q` 1-100 not blank, optional `board_id`; at least one of `assignee` or `q`, else 400) and `CardListItemSchema`; `GET /api/cards` filters through the requester's memberships, excludes soft-deleted Cards, matches title only and case-insensitively, applies all given filters together.
+    - Title match (D-07, BE-05, R10.1, R26.3): the service filters with `lower(CardEntity.title) LIKE '%' || <escaped lowercased term> || '%' ESCAPE '\'`, with `\`, `%` and `_` escaped (backslash first) and the term passed as a bound parameter, so a literal `%` or `_` matches literally and the expression `lower(title)` can use `ix_cards_title_lower_trgm`. Patterns shorter than 3 characters do not benefit from the trigram index; that is accepted.
     - The route calls exactly one service function, `list_cards_service`, which dispatches on `assignee` and `q` inside the service (design 4a, BE-02, ST-03); the handler holds no branching.
-    - `board_id` the requester cannot access gives 403 generic, a non-existent one 404 generic (evaluated first); this is the only body or query id that is not a 400. No title-search index is added (R26.3 is open, see U-03).
+    - `board_id` the requester cannot access gives 403 generic, a non-existent one 404 generic (evaluated first); this is the only body or query id that is not a 400. The title-search index itself is created by task 3.3 and verified by task 3.4 (R26.3, U-03 closed).
     - Files: backend/app/blueprints/cards/schema.py, backend/app/blueprints/cards/service.py, backend/app/blueprints/cards/routes.py
     - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 10.9, 18.5, 18.6, 18.7, 18.8, 18.9_
   - [ ]* 10.9 Write property test for Property 9: Search soundness, completeness, and idempotence (T-35)
@@ -234,12 +236,13 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Success and failure per service function; 201/200/400/403/404/409 per route including all five Card-id routes on a soft-deleted Card; assignee rules (Team member, non-member, unknown UUID); Member deleting another user's Card 403; completion transitions into, out of and between done Columns; equal-order 409 for a different Card at an existing `order`; repeating the same move request returns the same Board state (R7.13); a cross-Column move completes without an integrity error; rebalance on PostgreSQL; concurrent-move test on PostgreSQL (two simultaneous moves to the same slot end with unique increasing orders, one may be 409); a soft-deleted Card's `order` does not block an active Card; concurrent-edit test on PostgreSQL (two simultaneous PATCH requests are applied one after the other, no integrity error, the final Card equals the last applied request, no lost update beyond it; R15.3, D-05).
     - Body or query ids that do not exist are 400, not 404 or 403: unknown `column_id` in a move body (R7.4), a Column on another Board (R7.5), a non-member or unknown `assignee_id` (R18.2, body `Assignee must be a Team member`); the one exception is `board_id` in `GET /api/cards`, which is 404 or 403 with the generic body (R10.3).
     - Search and My Tasks: case-insensitivity, blank term 400, cross-Board isolation, soft-deleted exclusion, `assignee=me` returns only the requester's Cards.
+    - Search literals (D-07, R10.1): a term containing `%` matches only titles that contain a literal `%`, a term containing `_` matches only titles that contain a literal `_` (`q=a_b` does not match "axb"), and a term containing `\` matches literally; no wildcard behavior.
     - Files: backend/tests/unit/cards/test_cards_service.py, backend/tests/unit/cards/test_cards_routes.py, backend/tests/unit/cards/test_cards_ordering_pg.py
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 6.10, 6.11, 6.13, 6.14, 6.15, 6.16, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.14, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.9, 15.3, 15.4, 18.1, 18.2, 18.3, 18.4, 18.5, 18.6, 18.7, 18.8, 18.9, 18.12, 24.2, 24.3, 24.4, 24.5, 26.7, 28.1_
 
 - [x] 11. Notifications Blueprint
   - [x] 11.1 Implement the notifications Blueprint and mention service (T-37)
-    - `create_mention_notifications_service` (mention `@` + 3-30 letters, digits, underscore, lowercased, matched to Team members; one unread Notification per member per Comment with `message` = `<mentioner name> mentioned you on "<card title>"` truncated to 255 characters (design D-08, needs user confirmation); none for the author or an unmatched name; an edit notifies only newly mentioned members) and cleanup helpers for a deleted Comment (BE-15).
+    - `create_mention_notifications_service` (mention `@` + 3-30 letters, digits, underscore, lowercased, matched to Team members; one unread Notification per member per Comment with `message` = `<mentioner name> mentioned you on "<card title>"` truncated to 255 characters (design D-08, approved V11; stored at creation, not recomputed, R9.6); none for the author or an unmatched name; an edit notifies only newly mentioned members) and cleanup helpers for a deleted Comment (BE-15).
     - `NotificationQuerySchema` (page >= 1 default 1, per_page 1-50 default 10), `NotificationSchema` with derived `card_id` and `board_id`; list returns exactly `items`, `page`, `per_page`, `total`, `total_pages`, `unread_count` (BE-07), hides Notifications of soft-deleted Cards (see U-04); mark read is idempotent and 404 `Not found` for another user's Notification; routes `GET /api/notifications` and `PATCH /api/notifications/<id>/read`.
     - Files: backend/app/blueprints/notifications/__init__.py, backend/app/blueprints/notifications/schema.py, backend/app/blueprints/notifications/service.py, backend/app/blueprints/notifications/routes.py, backend/app/__init__.py
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 9.10, 9.11, 9.12, 9.13_
@@ -397,7 +400,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - _Requirements: 4.1, 4.2, 4.5, 21.2, 21.3_
   - [x] 18.4 Build the Board Detail page and Kanban components (T-65)
     - `app/boards/[id]/page.tsx` Server Component fetching `GET /api/boards/<id>`; `KanbanBoard` (owns `useDragAndDrop` state), `BoardColumn` (only file with `onDragOver` and `onDrop`), `ColumnHeader`, `CardDragHandle` (only file with `draggable`), `CardItem`, `ColumnForm` and `CardForm` (inside `BaseModal`); the board scrolls horizontally in its own container; Columns and Cards shown in `order` ascending.
-    - The page learns the signed-in user's role from `GET /api/boards/<id>/members` (the row whose `user_id` is the user's own) and passes `role` to Client Components; see 18.7 and D-04.
+    - The page learns the signed-in user's role from `GET /api/boards/<id>/members` (the row whose `user_id` is the user's own) and passes `role` to Client Components; see 18.7, D-04 (approved V11) and FE-33. `BoardForm` and the Dashboard follow FE-33 (no `team_id` sent).
     - Hide Admin-only Column actions from Members (the API still enforces, R2.1). RTL tests for rendering order, forms and rollback display.
     - Files: frontend/app/boards/[id]/page.tsx, frontend/components/board/KanbanBoard.tsx, frontend/components/board/BoardColumn.tsx, frontend/components/board/ColumnHeader.tsx, frontend/components/board/CardDragHandle.tsx, frontend/components/board/ColumnForm.tsx, frontend/components/card/CardItem.tsx, frontend/components/card/CardForm.tsx, frontend/__tests__/KanbanBoard.test.tsx
     - _Requirements: 4.10, 5.1, 6.1, 7.15, 21.4_
@@ -411,8 +414,8 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: frontend/app/boards/[id]/page.tsx, frontend/components/board/KanbanBoard.tsx, frontend/__tests__/guest-mode.test.tsx
     - _Requirements: 3.8, 21.11, 21.17_
   - [x] 18.7 Add the Admin-only analytics panel to Board Detail (T-68)
-    - The Board payload has no role, so the page obtains the signed-in user's role from `GET /api/boards/<id>/members` (the row with the user's own `user_id`, open to every member, R12.7), passes `role` to Client Components, makes no members request in Guest_Mode (role `guest`, no JWT), and renders `AnalyticsPanel` and fetches `GET /api/boards/<id>/analytics` only for role `admin` (R11.11, design D-04).
-    - The panel is the new file `components/board/AnalyticsPanel.tsx`, which is not listed in FE-02 or ST-07; recommendation: add it to both (not edited here, see ambiguity A-FE). No UI for member management or invite links (OD-14, FE-32).
+    - The Board payload has no role, so the page obtains the signed-in user's role from `GET /api/boards/<id>/members` (the row with the user's own `user_id`, open to every member, R12.7), passes `role` to Client Components, makes no members request in Guest_Mode (role `guest`, no JWT), and renders `AnalyticsPanel` and fetches `GET /api/boards/<id>/analytics` only for role `admin` (R11.11, design D-04 approved V11, FE-33).
+    - The panel is `components/board/AnalyticsPanel.tsx`, listed in FE-02 and FE-33. RTL test (FE-33 VERIFY): rendered for `admin`, absent for `member` and `guest`; Jest `fetch` spy: Guest_Mode sends no request to `/members`. No UI for member management or invite links (OD-14, FE-32).
     - Files: frontend/components/board/AnalyticsPanel.tsx, frontend/app/boards/[id]/page.tsx, frontend/__tests__/AnalyticsPanel.test.tsx
     - _Requirements: 11.11, 12.7_
   - [x] 18.8 Build Card_Detail_Modal and the Comment thread components (T-69)
@@ -491,7 +494,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
 - Each leaf task lists `Files:` (ST-12) and `_Requirements:` (bare `N.k` equals `R<N>.<k>`).
 - Property tests are seeded loops in pytest or Jest (fixed seed, at least 100 iterations); no property-testing library is added (tech.md TC-02, TC-03).
 - Test tasks never run against a live URL and no task deploys, enters secrets, records a measurement or commits; see "Manual steps outside the task list".
-- Ambiguity A-FE: the Admin-only analytics panel needs a component file that structure.md and FE-02 do not list; the plan adds `components/board/AnalyticsPanel.tsx` inside an existing folder. Ambiguity A-TOOLS: ST-01 fixes the repository root, so checker scripts live in `backend/tools/`.
+- `components/board/AnalyticsPanel.tsx` is listed in FE-02 and FE-33 (design D-04, approved V11). Ambiguity A-TOOLS: ST-01 fixes the repository root, so checker scripts live in `backend/tools/`.
 
 ## Task Dependency Graph
 
@@ -860,16 +863,9 @@ No OD or A entry is added by this plan. Each item below lists the tasks that use
 |---|---|---|---|
 | U-01 | Should Columns be soft-deletable (DB-08 predicate on `board_columns`)? | 3.1, 3.3, 9.1 | Columns stay hard-deleted (R5.10); the partial index is created as DB-08 states and `deleted_at` is never written on Columns. |
 | U-02 | What does `teams.owner_id` mean for a shared Team? | 3.1, 3.4, 8.5 | Only the personal Team is created by a route; tests create shared Teams with `owner_id` set to the creating user. No route creates shared Teams. |
-| U-03 | R26.3 (mandatory) requires an index for case-insensitive Card title search. Is it created? | 3.2, 3.3, 10.8 | R26.3 is currently unmet for this part. Design D-07 recommends a trigram GIN index `ix_cards_title_lower_trgm` on `lower(title)` with the `pg_trgm` extension; it needs a change to database.md DB-08/DB-09 and a user decision first. No task creates it until then; search uses case-insensitive matching on `title` without that index. The other R26.3 indexes (including the 12 foreign-key indexes) are created in 3.1 to 3.3. |
 | U-04 | Are Notifications of a soft-deleted Card hidden from the list? | 11.1, 11.5 | Hidden, following R6.16 and BE-15 (filter on `CardEntity.deleted_at IS NULL` through the Comment). |
 | U-05 | Tombstone when a deleted middle Comment has only a deleted-reply chain | 12.1, 12.2 | Direct live replies only, as BE-15 states. |
 | U-06 | PATCH or DELETE of an already-deleted Comment, reply to a deleted parent | 12.1, 12.2 | Not specified anywhere; the Comment is treated as not found (404 generic) and the case is recorded for the user. |
-| U-07 / D-01 | Non-existent `team_id` in `POST /api/boards`: 400 or 403? | 8.1, 8.5 | 403 generic (`TeamAccessDeniedError`), per BE-15 and design D-01. |
-| D-04 | Board Detail role source (Board payload has no role) | 18.4, 18.6, 18.7 | Role from `GET /api/boards/<id>/members` (own `user_id` row); no members request in Guest_Mode; `AnalyticsPanel` only for `admin`. |
-| D-05 | Meaning of "stored Card equals one of the submitted versions" (R15.3) | 10.1, 10.10 | `update_card_service` takes a row lock (`with_for_update`) in one transaction; the final Card equals the last applied request. |
-| D-06 | What the 3-query budget counts (R14.2) | 8.1, 8.5 | The Columns query and the Cards query (Assignee joined); the guard's Board and membership lookups are counted separately; no query per Column or Card. |
-| D-07 | Trigram index for title search | 3.2, 3.3, 10.8 | No index and no `pg_trgm` extension is created (see U-03). |
-| D-08 | Notification `message` text | 11.1, 11.5 | `<mentioner name> mentioned you on "<card title>"`, truncated to 255 characters. |
 | U-08 | Dedicated exception for a Member deleting another user's Card | 10.1, 10.10 | `AdminAccessRequiredError` (BE-09). |
 | U-09 | Body for a non-existent `invite_id` | 8.4, 8.5 | 404 `{"error": "Not found"}` (BE-10). |
 | U-10 to U-12 | Notification and search links, empty bell for 30 s, silent polling failures | 18.2, 18.5, 17.4 | FE-28 and FE-29 text as written: `/boards/<board_id>?card=<card_id>`, no fetch on mount, no toast except 401. |
@@ -879,6 +875,19 @@ No OD or A entry is added by this plan. Each item below lists the tasks that use
 | U-17 | P95 needs an access-log duration but the Procfile text has no log option | 14.4, 1.2 | Procfile kept exactly as TC-20; the load script only records durations and the measurement stays a manual step. |
 | U-18 | CHANGELOG V2 to V5 lack the Prompt, Before and After labels (TC-21) | 22.3 | No task rewrites history; `check_changelog.py` reports the gap. |
 
+## Approved decisions (V11)
+
+Approved by the user in V11; they are no longer open. Tasks use the wording below. No OD or A entry is added by this plan.
+
+| Item | Subject | Tasks | Approved behavior |
+|---|---|---|---|
+| D-01 (audit U-07) | Non-existent `team_id` in `POST /api/boards` | 8.1, 8.5 | 403 with the Generic_Denial_Body (`TeamAccessDeniedError`), an exception to OD-02; same answer as for a Team the requester does not administer (R4.4, BE-15). |
+| D-04 | Board Detail role source (Board payload has no role) | 18.4, 18.6, 18.7 | Role from `GET /api/boards/<id>/members` (own `user_id` row); no members request in Guest_Mode; `AnalyticsPanel` only for `admin`; `AnalyticsPanel.tsx` listed in FE-02 and FE-33 (FE-33). |
+| D-05 | Meaning of "stored Card equals one of the submitted versions" (R15.3) | 10.1, 10.10 | `update_card_service` takes a row lock (`with_for_update`) in one transaction; the final Card equals the last applied request. |
+| D-06 | What the 3-query budget counts (R14.2) | 8.1, 8.5 | The Columns query plus the Cards query (Assignee joined); the guard's Board and membership lookups are counted separately; no query per Column or Card. |
+| D-07 (closes U-03) | Trigram index for title search (R26.3) | 3.2, 3.3, 3.4, 10.8, 10.10 | `CREATE EXTENSION IF NOT EXISTS pg_trgm` and GIN index `ix_cards_title_lower_trgm` on `lower(title) gin_trgm_ops` in the initial migration; search uses `lower(title) LIKE` with `\`, `%`, `_` escaped. Railway availability of `pg_trgm` is not confirmed (see "Manual steps outside the task list"). |
+| D-08 | Notification `message` text (R9.6) | 11.1, 11.5 | `<mentioner name> mentioned you on "<card title>"`, truncated to 255 characters, stored at creation. |
+
 ## Manual steps outside the task list
 
 Owner of every step: the user.
@@ -887,6 +896,7 @@ Owner of every step: the user.
 |---|---|
 | Create the Railway API service and PostgreSQL database, set env variables and secrets, apply `flask db upgrade` through the release step | R27.1, R27.2, R27.8 |
 | Create the Vercel project, set `API_BASE_URL` and `NEXT_PUBLIC_API_BASE_URL`, set CORS to the exact Vercel origin | R27.6, R27.7 |
+| At the first deploy, verify that `pg_trgm` can be created on the Railway PostgreSQL database (`CREATE EXTENSION IF NOT EXISTS pg_trgm;`), that `flask db upgrade` creates `ix_cards_title_lower_trgm`, and record the outcome; availability on Railway is NOT confirmed (design D-07, TC-10) | R26.3, R27.1, R27.8 |
 | Verify `GET /api/health`, register, login and one authenticated request per Blueprint from Postman on the public URL | R27.3, R27.4, R27.5 |
 | Open all seven screens on the live app at 375, 768 and 1280 px | R27.9 |
 | Run `npx playwright test` and `--repeat-each=3` against the live Vercel URL, review and commit `playwright-report/` | R28.4, R28.5, R28.6, R28.7, R28.8 |
@@ -1172,7 +1182,7 @@ Generated from requirements.md by script. A cell lists task numbers (Kiro checkl
 | R25.6 | 17.1, 20.1 | - |
 | R26.1 | 3.1, 3.2, 3.4 | - |
 | R26.2 | 3.2, 3.4 | - |
-| R26.3 | 3.3, 3.4 | Depends on a user decision (D-07) for the title-search index; unmet until decided. The remaining indexes are created by 3.3 |
+| R26.3 | 3.3, 3.4, 10.8 | Manual steps (D-07 approved V11; the trigram index and the foreign-key indexes are created by 3.3, verified by 3.4, used by the search in 10.8; `pg_trgm` on Railway is checked manually at the first deploy) |
 | R26.4 | 3.3, 3.4, 8.1 | - |
 | R26.5 | 5.1, 5.2 | - |
 | R26.6 | 3.1, 3.2, 3.4 | - |

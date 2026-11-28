@@ -53,7 +53,7 @@ sevy/
 │   ├── app/                   layout.tsx  page.tsx  globals.css  login/  register/  boards/[id]/  my-tasks/  profile/
 │   ├── components/
 │   │   ├── shared/            BaseButton.tsx  BaseBadge.tsx  BaseModal.tsx
-│   │   ├── board/             KanbanBoard.tsx  BoardColumn.tsx  ColumnHeader.tsx  CardDragHandle.tsx  BoardCard.tsx  BoardForm.tsx  ColumnForm.tsx
+│   │   ├── board/             KanbanBoard.tsx  BoardColumn.tsx  ColumnHeader.tsx  CardDragHandle.tsx  BoardCard.tsx  BoardForm.tsx  ColumnForm.tsx  AnalyticsPanel.tsx
 │   │   ├── card/              CardItem.tsx  CardDetailModal.tsx  CardForm.tsx  CardSearch.tsx  MyTaskRow.tsx
 │   │   ├── comments/          CommentList.tsx  CommentItem.tsx  CommentForm.tsx
 │   │   ├── notifications/     NotificationBell.tsx
@@ -71,7 +71,7 @@ sevy/
 
 Document copies: the working copy of the specs is `.kiro/specs/<feature>/` and `specs/` is the submission copy, so a spec change is made in the working copy first and then copied to `specs/` before it is committed.
 
-Rule ownership by file (one line each, so a rule is looked up in one place): product behavior and the route inventory → `requirements.md` (Appendix A); backend → `guidelines/backend.md`; database → `guidelines/database.md`; frontend → `guidelines/frontend.md`; tools, configuration, deployment, tests, process → `tech.md`; layout and naming → this file. `guidelines/frontend.md` FE-02 must list `MyTaskRow` in `components/card/` (it still lists four `card/` components).
+Rule ownership by file (one line each, so a rule is looked up in one place): product behavior and the route inventory → `requirements.md` (Appendix A); backend → `guidelines/backend.md`; database → `guidelines/database.md`; frontend → `guidelines/frontend.md`; tools, configuration, deployment, tests, process → `tech.md`; layout and naming → this file.
 
 ### ST-01 — Fixed top-level layout
 - **Rule:** The repository root contains exactly: `.kiro/`, `specs/`, `guidelines/`, `backend/`, `frontend/`, `README.md`, `.gitignore` (plus `.git/`). No application code, `.env*` file, or build output at the root.
@@ -108,7 +108,7 @@ Rule ownership by file (one line each, so a rule is looked up in one place): pro
 ### ST-05 — Size limits
 - **Rule:** Any `.py` file under `backend/app/` ≤ 250 lines; any `.ts`/`.tsx` file under `frontend/` ≤ 200 lines; each `page.tsx` ≤ 120 lines. When exceeded, extract a function or component.
 - **Rationale:** Short files are reviewable and fit a single AI context window.
-- **Example:** `KanbanBoard.tsx` delegates a column to `BoardColumn.tsx` and a card to `CardItem.tsx`; `BoardCard.tsx` is the board summary tile on the Dashboard.
+- **Example:** `KanbanBoard.tsx` delegates a column to `BoardColumn.tsx` and a card to `CardItem.tsx`; `BoardCard.tsx` is the board summary tile on the Dashboard; `AnalyticsPanel.tsx` is the admin-only analytics panel, kept out of `KanbanBoard.tsx`.
 - **Verify:** `find backend/app -name "*.py" | xargs wc -l | awk '$1>250 && $2!="total"' | wc -l` → 0; `find frontend/app frontend/components frontend/hooks frontend/lib frontend/context \( -name "*.ts" -o -name "*.tsx" \) | xargs wc -l | awk '$1>200 && $2!="total"' | wc -l` → 0; `wc -l frontend/app/**/page.tsx frontend/app/page.tsx | awk '$1>120 && $2!="total"' | wc -l` → 0.
 
 ---
@@ -122,7 +122,7 @@ Rule ownership by file (one line each, so a rule is looked up in one place): pro
 - **Verify:** `find frontend/app -name "page.tsx" | wc -l` → 6.
 
 ### ST-07 — Component folders and import boundaries
-- **Rule:** `components/shared/` holds only domain-free building blocks (`BaseButton`, `BaseBadge`, `BaseModal`). Files in `shared/` never import `lib/apiClient`, any hook that performs requests, or another `components/` folder. Feature components live in `board/`, `card/` (including `MyTaskRow.tsx`), `comments/`, `notifications/`, `layout/`. Use the `@/` alias for imports; no relative path may climb more than one level (`../../` is forbidden).
+- **Rule:** `components/shared/` holds only domain-free building blocks (`BaseButton`, `BaseBadge`, `BaseModal`). Files in `shared/` never import `lib/apiClient`, any hook that performs requests, or another `components/` folder. Feature components live in `board/` (including `AnalyticsPanel.tsx`), `card/` (including `MyTaskRow.tsx`), `comments/`, `notifications/`, `layout/`. Use the `@/` alias for imports; no relative path may climb more than one level (`../../` is forbidden).
 - **Rationale:** Shared components stay reusable and testable in isolation.
 - **Example:** `CardDetailModal` imports `@/components/shared/BaseModal`, not `../../shared/BaseModal`.
 - **Verify:** `grep -rnE "apiClient|from '@/(components/(board|card|comments|notifications|layout)|hooks)" frontend/components/shared | wc -l` → 0; `grep -rn "\.\./\.\./" frontend --include=*.ts --include=*.tsx --exclude-dir=node_modules --exclude-dir=.next | wc -l` → 0; `ls frontend/components | wc -l` → 6.
