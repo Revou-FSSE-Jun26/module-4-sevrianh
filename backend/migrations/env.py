@@ -5,8 +5,6 @@ from flask import current_app
 
 from alembic import context
 
-import app.models  # noqa: F401  registers every model on db.metadata for autogenerate and check
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
