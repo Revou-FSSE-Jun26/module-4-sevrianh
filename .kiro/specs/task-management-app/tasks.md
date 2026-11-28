@@ -308,22 +308,22 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/tests/unit/analytics/test_analytics_properties.py
     - _Requirements: 24.7, 24.8_
 
-- [ ] 14. Backend integration
-  - [ ] 14.1 Register all eight Blueprints and the health route in create_app (T-49)
+- [x] 14. Backend integration
+  - [x] 14.1 Register all eight Blueprints and the health route in create_app (T-49)
     - Ensure `create_app()` calls `register_blueprint` exactly eight times (auth, boards, columns, cards, comments, notifications, analytics, users), registers `health` and the error handlers, and imports no blueprint `routes.py` from another blueprint (ST-02, ST-04). Add `python -c "from app import create_app; create_app()"` as a smoke test.
     - Files: backend/app/__init__.py, backend/tests/unit/auth/test_app_factory.py
     - _Requirements: 20.6, 20.8, 29.1_
-  - [ ] 14.2 Write the route inventory, 401 sweep, envelope and scope tests (T-50)
+  - [x] 14.2 Write the route inventory, 401 sweep, envelope and scope tests (T-50)
     - Compare the method and path pairs of `app.url_map` (excluding `static`, parameter names normalised) with the 32 routes of Appendix A (PR-02); iterate every route for 401 without a token except the three public routes and the two Guest routes (BE-08); parametrised envelope test asserting exactly one of `data` or `error` and a non-empty string `error` for success, 400, 401, 403, 404 and 405 (NFR-04); unknown field gives 400; a CORS test that a foreign `Origin` receives no `Access-Control-Allow-Origin`.
     - Scope test: no route, model or module for attachments, labels, due dates, WebSockets, password reset or OAuth exists (R17.2, R17.3).
     - UUID path rule (R1.6, BE-04): over every route that has a path id, a non-UUID id with a valid token returns 400 with a non-empty `error` string, evaluated after authentication and before the existence check (one parametrised test).
     - Files: backend/tests/unit/auth/test_route_inventory.py, backend/tests/unit/auth/test_envelope_sweep.py, backend/tests/unit/auth/test_scope_limits.py, backend/tests/unit/auth/test_path_uuid.py
     - _Requirements: 1.6, 13.8, 13.9, 16.4, 17.2, 17.3, 17.4, 20.1, 20.2, 20.3, 20.4, 20.5, 20.9, 20.10, 20.11, 20.12_
-  - [ ] 14.3 Write the API-level end-to-end flow test (T-51)
+  - [x] 14.3 Write the API-level end-to-end flow test (T-51)
     - `tests/e2e/test_core_flow.py`: register, login, create board, add Column "To Do" and "Done", create Card, move Card into "Done" (`completed_at` set), comment with a mention, read the notification, soft delete, analytics as Admin; assert envelope shapes at each step (TC-17).
     - Files: backend/tests/e2e/test_core_flow.py
     - _Requirements: 17.1, 28.1_
-  - [ ] 14.4 Create the load-test script and the RESULTS.md template (T-52)
+  - [x] 14.4 Create the load-test script and the RESULTS.md template (T-52)
     - Standard-library only script `backend/tests/load/load_test.py` taking the API URL as an argument: 200 virtual users on one Board of 5 Columns and 50 Cards for a 10-minute window; P95 must be taken from durations measured at the API server (TC-23). Do not run it and add no dependency.
     - `backend/tests/load/RESULTS.md` template with every field "NOT RECORDED" and status "not measured": Date, Script name and version, Railway plan, Gunicorn worker class and worker count, Database plan, P95 (ms). Never write a value that was not measured.
     - Files: backend/tests/load/load_test.py, backend/tests/load/RESULTS.md

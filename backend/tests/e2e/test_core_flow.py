@@ -1,52 +1,82 @@
-"""API-level core flow (task 14.3)."""
+"""API-level end-to-end core flow test (T-51)."""
 
 
-def test_register_login_board_column_card_move_comment_notification_delete_analytics(client):
-    suffix = 'core-flow'
-    register = client.post('/api/auth/register', json={
-        'name': 'Core User', 'username': 'core_user',
-        'email': f'{suffix}@example.com', 'password': 'password123',
-    })
-    assert register.status_code == 201
+def _data(resp, expected_status: int):
+    assert resp.status_code == expected_status, resp.get_json()
+    body = resp.get_json()
+    assert set(body.keys()) == {'data'}
+    return body['data']
 
-    login = client.post('/api/auth/login', json={
-        'email': f'{suffix}@example.com', 'password': 'password123',
-    })
-    assert login.status_code == 200
-    token = login.get_json()['data']['access_token']
-    auth = {'Authorization': f'Bearer {token}'}
 
-    board = client.post('/api/boards', json={'name': 'Core Board'}, headers=auth)
-    assert board.status_code == 201
-    board_id = board.get_json()['data']['id']
+def test_core_api_flow(client):
+    # 1. Register two users (admin and teammate) and login
+    _data(client.post('/api/auth/register', json={
+        'name': 'Admin User',
+        'username': 'e2e_admin',
+        'email': 'e2e_admin@example.com',
+        'password': 'password123',
+    }), 201)
+    _data(client.post('/api/auth/register', json={
+        'name': 'Mate User',
+        'username': 'e2e_mate',
+        'email': 'e2e_mate@example.com',
+        'password': 'password123',
+    }), 201)
 
-    todo = client.post(f'/api/boards/{board_id}/columns', json={'name': 'To Do'}, headers=auth)
-    done = client.post(f'/api/boards/{board_id}/columns', json={'name': 'Done', 'is_done': True}, headers=auth)
-    assert todo.status_code == 201 and done.status_code == 201
-    todo_id = todo.get_json()['data']['id']
-    done_id = done.get_json()['data']['id']
+    admin_login = _data(client.post('/api/auth/login', json={
+        'email': 'e2e_admin@example.com',
+        'password': 'password123',
+    }), 200)
+    mate_login = _data(client.post('/api/auth/login', json={
+        'email': 'e2e_mate@example.com',
+        'password': 'password123',
+    }), 200)
 
-    card = client.post(f'/api/columns/{todo_id}/cards', json={'title': 'Core Card'}, headers=auth)
-    assert card.status_code == 201
-    card_id = card.get_json()['data']['id']
+    admin_h = {'Authorization': f"Bearer {admin_login['access_token']}"}
+    mate_h = {'Authorization': f"Bearer {mate_login['access_token']}"}
 
-    moved = client.patch(
-        f'/api/cards/{card_id}/position',
-        json={'column_id': done_id, 'order': 1024.0}, headers=auth,
-    )
-    assert moved.status_code == 200
-    assert moved.get_json()['data']['card']['completed_at'] is not None
+    # 2. Create board & invite teammate
+    board = _data(client.post('/api/boards', json={'name': 'E2E Board'}, headers=admin_h), 201)
+    board_id = board['id']
+    _data(client.post(f'/api/boards/{board_id}/members', json={
+        'email': 'e2e_mate@example.com',
+        'role': 'member',
+    }, headers=admin_h), 201)
 
-    comment = client.post(
-        f'/api/cards/{card_id}/comments', json={'content': 'Flow comment'}, headers=auth,
-    )
-    assert comment.status_code == 201
+    # 3. Add "To Do" and "Done" columns
+    todo_col = _data(client.post(f'/api/boards/{board_id}/columns', json={
+        'name': 'To Do', 'is_done': False,
+    }, headers=admin_h), 201)
+    done_col = _data(client.post(f'/api/boards/{board_id}/columns', json={
+        'name': 'Done', 'is_done': True,
+    }, headers=admin_h), 201)
 
-    notifications = client.get('/api/notifications', headers=auth)
-    assert notifications.status_code == 200
+    # 4. Create card in "To Do" and move to "Done"
+    card = _data(client.post(f"/api/columns/{todo_col['id']}/cards", json={
+        'title': 'Ship V1',
+        'assignee_id': mate_login['user']['id'],
+    }, headers=admin_h), 201)
+    assert card['completed_at'] is None
 
-    deleted = client.delete(f'/api/cards/{card_id}', headers=auth)
-    assert deleted.status_code == 200
+    moved = _data(client.patch(f"/api/cards/{card['id']}/position", json={
+        'column_id': done_col['id'],
+        'order': 1000,
+    }, headers=admin_h), 200)
+    assert moved['card']['completed_at'] is not None
 
-    analytics = client.get(f'/api/boards/{board_id}/analytics', headers=auth)
-    assert analytics.status_code == 200
+    # 5. Comment with @mention and read notification as teammate
+    _data(client.post(f"/api/cards/{card['id']}/comments", json={
+        'content': 'Great job @e2e_mate!',
+    }, headers=admin_h), 201)
+
+    notes = _data(client.get('/api/notifications', headers=mate_h), 200)
+    assert notes['unread_count'] == 1
+    note_id = notes['items'][0]['id']
+    read_note = _data(client.patch(f'/api/notifications/{note_id}/read', headers=mate_h), 200)
+    assert read_note['is_read'] is True
+
+    # 6. Soft delete card and check analytics as Admin
+    _data(client.delete(f"/api/cards/{card['id']}", headers=admin_h), 200)
+    analytics = _data(client.get(f'/api/boards/{board_id}/analytics', headers=admin_h), 200)
+    assert analytics['completed_this_week'] == 0
+    assert sum(c['count'] for c in analytics['cards_per_column']) == 0

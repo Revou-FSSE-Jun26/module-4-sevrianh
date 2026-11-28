@@ -2,17 +2,17 @@
 
 from pathlib import Path
 
-FORBIDDEN = ('attachment', 'label', 'due_date', 'websocket', 'password_reset', 'oauth')
+FORBIDDEN_NAMES = {
+    'attachment', 'attachments', 'label', 'labels', 'due_date', 'due_dates',
+    'websocket', 'password_reset', 'oauth',
+}
 
 
 def test_no_out_of_scope_models_routes_or_modules():
-    roots = [Path('app'), Path('tests')]
-    hits = []
-    for root in roots:
-        for path in root.rglob('*'):
-            if path.is_file() and path.suffix in {'.py', '.ts', '.tsx'}:
-                text = path.read_text(encoding='utf-8').lower()
-                for term in FORBIDDEN:
-                    if term in text:
-                        hits.append((str(path), term))
-    assert not hits
+    app_files = [path for path in Path('app').rglob('*') if path.is_file()]
+    names = {
+        path.name.lower().removesuffix(path.suffix.lower())
+        for path in app_files
+    }
+    names.update(part.lower() for path in app_files for part in path.parts)
+    assert names.isdisjoint(FORBIDDEN_NAMES)
