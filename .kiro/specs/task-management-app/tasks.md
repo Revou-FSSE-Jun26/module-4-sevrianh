@@ -267,7 +267,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 9.10, 9.11, 9.12, 9.13, 28.1_
 
 - [ ] 12. Comments Blueprint
-  - [ ] 12.1 Implement the comments Blueprint (T-42)
+  - [x] 12.1 Implement the comments Blueprint (T-42)
     - `CommentCreateSchema` (`content` 1-2000, `parent_id` optional), `CommentUpdateSchema`, `CommentSchema` (API `parent_id` maps to `parent_comment_id`, `is_deleted` derived from `deleted_at`).
     - Create (parent must be on the same Card else 400, mention notifications via the notifications service, `comment_added` event), list with the Guest guard (flat, `created_at` ascending, tombstone with empty `content` only when a direct live reply exists, otherwise omitted; see U-05), edit and delete by the author only (also for Admins, `CommentOwnershipError`); Card-id routes answer a soft-deleted Card with 404 generic; routes for the four comment endpoints.
     - Files: backend/app/blueprints/comments/__init__.py, backend/app/blueprints/comments/schema.py, backend/app/blueprints/comments/service.py, backend/app/blueprints/comments/routes.py, backend/app/__init__.py

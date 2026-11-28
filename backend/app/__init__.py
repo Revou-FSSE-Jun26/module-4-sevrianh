@@ -30,6 +30,7 @@ def register_blueprints(app: Flask) -> None:
     from app.blueprints.boards import boards_bp
     from app.blueprints.cards import cards_bp
     from app.blueprints.columns import columns_bp
+    from app.blueprints.comments import comments_bp
     from app.blueprints.notifications import notifications_bp
     from app.blueprints.users import users_bp
 
@@ -37,5 +38,6 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(boards_bp)
     app.register_blueprint(cards_bp)
     app.register_blueprint(columns_bp)
+    app.register_blueprint(comments_bp)
     app.register_blueprint(notifications_bp)
     app.register_blueprint(users_bp)
