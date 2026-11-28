@@ -17,7 +17,7 @@ export default async function BoardDetailPage({ params, searchParams }: Props) {
   const isGuest = Boolean(invite);
 
   const cookieStore = await cookies();
-  const token = isGuest ? null : (cookieStore.get('access_token')?.value ?? null);
+  const token = isGuest ? null : (cookieStore.get('sevy_token')?.value ?? null);
   const opts = isGuest ? { inviteToken: invite } : { token };
 
   let board: BoardDetail;

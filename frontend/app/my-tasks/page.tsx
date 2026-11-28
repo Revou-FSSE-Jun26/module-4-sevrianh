@@ -5,7 +5,7 @@ import type { CardListItem } from '@/types/api';
 
 export default async function MyTasksPage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('access_token')?.value ?? null;
+  const token = cookieStore.get('sevy_token')?.value ?? null;
 
   let tasks: CardListItem[] = [];
   try {
@@ -31,7 +31,9 @@ export default async function MyTasksPage() {
       ) : (
         Array.from(groups.entries()).map(([boardName, cards]) => (
           <section key={boardName} className="mb-6">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">{boardName}</h2>
+            <h2 className="mb-3 text-sm font-semibold tracking-wide text-gray-500 uppercase">
+              {boardName}
+            </h2>
             <ul className="space-y-2">
               {cards.map((card) => (
                 <MyTaskRow key={card.id} card={card} />

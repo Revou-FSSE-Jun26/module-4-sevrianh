@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "jest",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "test:e2e": "playwright test --repeat-each=3"
   },
   "dependencies": {
     "next": "15.5.29",

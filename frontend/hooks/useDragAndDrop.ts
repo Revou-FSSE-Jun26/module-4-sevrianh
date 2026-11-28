@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import type { DragEvent } from 'react';
+import type { Dispatch, DragEvent, SetStateAction } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
@@ -39,6 +39,8 @@ function orderAt(board: BoardDetail, cardId: string, columnId: string, index?: n
 
 export interface UseDragAndDrop {
   board: BoardDetail;
+  /** Replace the local board copy, for example after a Column or Card is created. */
+  setBoard: Dispatch<SetStateAction<BoardDetail>>;
   draggingCardId: string | null;
   handleDragStart: (event: DragEvent, cardId: string) => void;
   handleDragEnd: () => void;
@@ -98,5 +100,13 @@ export function useDragAndDrop(initialBoard: BoardDetail): UseDragAndDrop {
     [board, draggingCardId, token, router, handleError],
   );
 
-  return { board, draggingCardId, handleDragStart, handleDragEnd, handleDragOver, handleDrop };
+  return {
+    board,
+    setBoard,
+    draggingCardId,
+    handleDragStart,
+    handleDragEnd,
+    handleDragOver,
+    handleDrop,
+  };
 }

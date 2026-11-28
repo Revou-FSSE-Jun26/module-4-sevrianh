@@ -449,3 +449,28 @@
 - **Follow-ups that are recommendations only and were NOT edited:** `database.md` DB-09 to name the foreign-key indexes and, if D-07 is approved, the trigram index `ix_cards_title_lower_trgm` and the `pg_trgm` extension; `frontend.md` FE-02 and `structure.md` ST-07 to list `components/board/AnalyticsPanel.tsx`.
 - **Decisions awaiting the user:** D-01, D-04, D-05, D-06, D-07, D-08.
 - **Not run:** no task, test or check of the plan has been run against code.
+
+### Implementation update - 2026-11-28 (V10, no specification version change)
+**Specification changes**
+- None. `requirements.md` and `design.md` are unchanged at V10; the fixes below bring the code in line with them.
+**Design changes**
+- None.
+**Implementation changes**
+- Tasks 8.5, 11.5 and 12.2 (T-22, T-41, T-43): added `backend/tests/unit/comments/` (conftest, service and route tests) and `backend/tests/unit/notifications/` (conftest, service and route tests). The existing boards tests already satisfied T-22.
+- Added `test_auth_service_races.py` and `test_users_service_races.py` so every `service.py` reaches at least 90% (TC-17); `auth` and `users` were 85% and 76%.
+- Task 22.3 (T-79): added `backend/tools/check_traceability.py`, `check_changelog.py` and `check_guidelines.py` (read-only, stdlib only).
+- Tasks 21.1 to 21.4 (T-73 to T-76): added `frontend/playwright.config.ts`, `e2e/helpers/api.ts`, `e2e/helpers/board.ts`, `e2e/auth.spec.ts`, `e2e/kanban.spec.ts`, `e2e/pages.spec.ts`, and the npm script `test:e2e`. `.gitignore` now ignores `frontend/test-results/`.
+**Bug fixes**
+- `DELETE /api/comments/<id>` returned `{"deleted": true}`; R8.10, R20.5 and design section 4 require `{"id": "<uuid>"}`. Fixed in `comments/service.py`; no consumer used the old shape.
+- `app/page.tsx`, `app/my-tasks/page.tsx` and `app/boards/[id]/page.tsx` read the cookie `access_token`, but login writes `sevy_token` (FE-22). Every logged-in user saw an empty Dashboard, an empty My Tasks page and a Board that failed to load. All three now read `sevy_token`.
+- `Header.tsx`: the brand link prefetched `/` while logged out; middleware answered 307 to `/login` and the client router cache kept that redirect, so the first login stayed on `/login`. The link now prefetches only when authenticated.
+- `KanbanBoard.tsx`: the component kept a second `columns` state that a sync block reset to the hook's `board`, so a new Column or Card disappeared at once, and the API's Column response has no `cards` array. `useDragAndDrop` now returns `setBoard` and `KanbanBoard` uses the hook's `board` as its only state.
+**Breaking changes**
+- None for API clients except the response of `DELETE /api/comments/<id>` (see Bug fixes), which now follows the specification.
+**Evidence (this machine, nothing deployed)**
+- Backend: 646 passed (was 571), total coverage 98.34%, every `service.py` at least 90%, `flake8 app tests tools` clean.
+- Frontend: Jest 127 passed; Playwright against a local production build (`next build`, `next start`) and a local API: 20 tests, 60 of 60 with `--repeat-each=3`, 0 retries, 0 uses of `waitForTimeout`. This is not the live Vercel run that BG-01 requires.
+**Known open items**
+- `check_changelog.py` reports that V2 to V5 lack the `**Prompt**`, `**Before**`, `**After**` labels (TC-21). Historical entries were not edited.
+- Optional property tests (T-12, T-15, T-20, T-23, T-24, T-28, T-30 to T-33, T-35, T-38, T-39, T-44, T-47, T-48) are not written.
+- NFR-01 is still "not measured"; no load test has been run.

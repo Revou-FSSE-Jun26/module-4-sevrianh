@@ -6,7 +6,7 @@ import DashboardClient from './DashboardClient';
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('access_token')?.value ?? null;
+  const token = cookieStore.get('sevy_token')?.value ?? null;
 
   let boards: Board[] = [];
   try {

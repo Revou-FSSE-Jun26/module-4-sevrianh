@@ -136,7 +136,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - `InviteLinkCreateSchema` (empty body or `{}`, any field rejected); create generates `secrets.token_urlsafe(32)`, stores only the hash, returns `id`, `board_id`, `token`, `created_at` once (201); revoke sets `revoked_at`, keeps the row, returns the id; an unknown or foreign `invite_id` gives 404 `Not found` before the Admin check. API only (OD-14).
     - Files: backend/app/blueprints/boards/schema.py, backend/app/blueprints/boards/service.py, backend/app/blueprints/boards/routes.py
     - _Requirements: 2.3, 2.6, 3.1, 3.2, 3.6, 3.7_
-  - [ ] 8.5 Write boards service, route and permission-matrix tests (T-22)
+  - [x] 8.5 Write boards service, route and permission-matrix tests (T-22)
     - Success and failure test per service function; route tests for 200/201/400/401/403/404/409 across the board, member and invite endpoints; table-driven permission test (`-k permission`) with one case per applicable cell of the Requirement 2 table for each role, cross-Team denial for Board ids, 404 before 403, non-Admin member management 403 before the email lookup, revoked-link read 404, link of Board A gives nothing on Board B, Guest write attempts change no data.
     - Query budget (R14.2, design D-06): loading the Columns and Cards of `GET /api/boards/<id>` with 5 Columns and 50 Cards takes at most 3 queries (one for Columns, one for non-deleted Cards with the Assignee joined in the same query), and no query runs per Column or per Card; the guard's Board and membership lookups are counted separately.
     - Files: backend/tests/unit/boards/test_boards_service.py, backend/tests/unit/boards/test_boards_routes.py, backend/tests/unit/boards/test_permission_matrix.py
@@ -237,7 +237,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/tests/unit/cards/test_cards_service.py, backend/tests/unit/cards/test_cards_routes.py, backend/tests/unit/cards/test_cards_ordering_pg.py
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 6.10, 6.11, 6.13, 6.14, 6.15, 6.16, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.10, 7.14, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.9, 15.3, 15.4, 18.1, 18.2, 18.3, 18.4, 18.5, 18.6, 18.7, 18.8, 18.9, 18.12, 24.2, 24.3, 24.4, 24.5, 26.7, 28.1_
 
-- [ ] 11. Notifications Blueprint
+- [x] 11. Notifications Blueprint
   - [x] 11.1 Implement the notifications Blueprint and mention service (T-37)
     - `create_mention_notifications_service` (mention `@` + 3-30 letters, digits, underscore, lowercased, matched to Team members; one unread Notification per member per Comment with `message` = `<mentioner name> mentioned you on "<card title>"` truncated to 255 characters (design D-08, needs user confirmation); none for the author or an unmatched name; an edit notifies only newly mentioned members) and cleanup helpers for a deleted Comment (BE-15).
     - `NotificationQuerySchema` (page >= 1 default 1, per_page 1-50 default 10), `NotificationSchema` with derived `card_id` and `board_id`; list returns exactly `items`, `page`, `per_page`, `total`, `total_pages`, `unread_count` (BE-07), hides Notifications of soft-deleted Cards (see U-04); mark read is idempotent and 404 `Not found` for another user's Notification; routes `GET /api/notifications` and `PATCH /api/notifications/<id>/read`.
@@ -261,18 +261,18 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Modify `remove_team_member_service` to call the notifications cleanup so the removed user's Notifications for the Team's Boards are deleted, keeping authored Cards and Comments (R9.13, R12.5).
     - Files: backend/app/blueprints/boards/service.py, backend/app/blueprints/notifications/service.py
     - _Requirements: 9.13, 12.5, 12.6_
-  - [ ] 11.5 Write notifications service and route tests (T-41)
+  - [x] 11.5 Write notifications service and route tests (T-41)
     - Success and failure per service function; exact counts for single, repeated, self and unmatched mentions; the stored `message` equals `<mentioner name> mentioned you on "<card title>"` and is at most 255 characters (D-08); edit adds only new mentions; pagination keys, `total_pages` 0 for empty, `unread_count` beyond the page; per_page 51 and page 0 give 400; mark read idempotent, other user 404; deleting a Comment removes its Notifications; removing a member removes theirs.
     - Files: backend/tests/unit/notifications/test_notifications_service.py, backend/tests/unit/notifications/test_notifications_routes.py
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 9.10, 9.11, 9.12, 9.13, 28.1_
 
-- [ ] 12. Comments Blueprint
+- [x] 12. Comments Blueprint
   - [x] 12.1 Implement the comments Blueprint (T-42)
     - `CommentCreateSchema` (`content` 1-2000, `parent_id` optional), `CommentUpdateSchema`, `CommentSchema` (API `parent_id` maps to `parent_comment_id`, `is_deleted` derived from `deleted_at`).
     - Create (parent must be on the same Card else 400, mention notifications via the notifications service, `comment_added` event), list with the Guest guard (flat, `created_at` ascending, tombstone with empty `content` only when a direct live reply exists, otherwise omitted; see U-05), edit and delete by the author only (also for Admins, `CommentOwnershipError`); Card-id routes answer a soft-deleted Card with 404 generic; routes for the four comment endpoints.
     - Files: backend/app/blueprints/comments/__init__.py, backend/app/blueprints/comments/schema.py, backend/app/blueprints/comments/service.py, backend/app/blueprints/comments/routes.py, backend/app/__init__.py
     - _Requirements: 2.2, 2.8, 6.14, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 8.10, 8.11, 8.12, 8.18, 8.19_
-  - [ ] 12.2 Write comments service and route tests (T-43)
+  - [x] 12.2 Write comments service and route tests (T-43)
     - Success and failure per service function; routes: 201 create, 400 missing `content`, 401 unauthenticated, 403 non-owner edit or delete, 403 non-member create, 404 on missing or soft-deleted Card; tombstone with a live reply, omitted without; Guest read with a valid link, no Guest write; edited indicator data (`updated_at` later than `created_at`).
     - Files: backend/tests/unit/comments/test_comments_service.py, backend/tests/unit/comments/test_comments_routes.py
     - _Requirements: 2.2, 2.8, 6.14, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 8.10, 8.11, 8.12, 8.18, 8.19, 28.1, 28.2_
@@ -329,7 +329,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/tests/load/load_test.py, backend/tests/load/RESULTS.md
     - _Requirements: 14.4, 14.5, 14.6, 15.1, 15.2_
 
-- [ ] 15. Checkpoint - backend complete
+- [x] 15. Checkpoint - backend complete
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 16. Frontend scaffold, API client and auth state
@@ -379,7 +379,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: frontend/hooks/useCardSearch.ts, frontend/__tests__/useCardSearch.test.tsx
     - _Requirements: 10.10, 10.11_
 
-- [ ] 18. Pages and feature components
+- [x] 18. Pages and feature components
   - [x] 18.1 Build the /register and /login pages with tests (T-62)
     - Controlled forms inside the page layout with client-side validation mirroring BE-05 (email, password at least 8, username 3-30 of letters, digits, underscore, non-empty name); register redirects to `/login` on 201; login calls `login()` with `access_token` and `user` and redirects to `/`; invalid credentials show "Invalid credentials" inline and no session-expired toast.
     - RTL tests for validation messages, redirects and the inline error.
@@ -429,7 +429,7 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: frontend/app/profile/page.tsx, frontend/__tests__/profile-page.test.tsx
     - _Requirements: 19.7, 19.8, 19.9, 21.1_
 
-- [ ] 19. Checkpoint - frontend pages
+- [x] 19. Checkpoint - frontend pages
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 20. Responsive and accessibility pass
@@ -439,21 +439,21 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: frontend/e2e/helpers/viewport.ts, frontend/components/ (class fixes only), frontend/app/ (class fixes only)
     - _Requirements: 23.1, 23.2, 23.3, 25.1, 25.2, 25.6_
 
-- [ ] 21. Playwright end-to-end suite
-  - [ ] 21.1 Create the Playwright configuration and API helpers (T-73)
+- [x] 21. Playwright end-to-end suite
+  - [x] 21.1 Create the Playwright configuration and API helpers (T-73)
     - `playwright.config.ts` with `baseURL` from `PLAYWRIGHT_BASE_URL`, desktop and mobile projects (the mobile project runs only `pages.spec.ts`), HTML reporter output `playwright-report/` kept in the repository; `e2e/helpers/api.ts` creating a user through the API with unique email and username for every test. No `waitForTimeout` anywhere.
     - Add an npm script `test:e2e` that runs `playwright test --repeat-each=3` (configuration only; it is not run against a live URL by any task).
     - Files: frontend/playwright.config.ts, frontend/e2e/helpers/api.ts, frontend/package.json
     - _Requirements: 28.6, 28.7, 28.8_
-  - [ ] 21.2 Write e2e/auth.spec.ts (T-74)
+  - [x] 21.2 Write e2e/auth.spec.ts (T-74)
     - Four scenarios: successful login redirect, invalid credentials error, unauthenticated redirect to `/login`, post-logout redirect (cookie gone). Optional fifth in the same file: an invite link created through the API opens `/boards/<id>?invite=<token>` read-only without redirect. Web-first assertions only.
     - Files: frontend/e2e/auth.spec.ts
     - _Requirements: 3.8, 21.8, 21.9, 21.11, 21.12, 21.13, 28.4_
-  - [ ] 21.3 Write e2e/kanban.spec.ts (T-75)
+  - [x] 21.3 Write e2e/kanban.spec.ts (T-75)
     - The eight steps of TG-02: log in, create a Board, add "To Do", add "Done", create a Card in "To Do", drag it to "Done", reload, assert it is still in "Done"; own user per test; use `waitForResponse` or `expect.poll`, never fixed sleeps.
     - Files: frontend/e2e/kanban.spec.ts
     - _Requirements: 7.15, 28.5, 28.8_
-  - [ ] 21.4 Write e2e/pages.spec.ts (T-76)
+  - [x] 21.4 Write e2e/pages.spec.ts (T-76)
     - Visit `/register`, `/login`, `/`, `/boards/[id]`, `/my-tasks`, `/profile` and open the Card_Detail_Modal at desktop and mobile widths; assert no horizontal overflow at 375, 768 and 1280 px with the viewport helper.
     - Files: frontend/e2e/pages.spec.ts
     - _Requirements: 21.1, 23.1, 23.2, 23.3, 27.9_
@@ -468,16 +468,16 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - `guidelines/VIOLATIONS.md` with the `### V-nn` entry template (guideline ID, file and line, what the AI produced, the fix) and a before/after table with empty measured numbers. Do not add example violations; real entries are added when found.
     - Files: guidelines/VIOLATIONS.md
     - _Requirements: 29.5_
-  - [ ] 22.3 Add documentation checker scripts (T-79)
+  - [x] 22.3 Add documentation checker scripts (T-79)
     - `backend/tools/check_guidelines.py` (ST-12 guideline checker), `backend/tools/check_changelog.py` (TC-21 round and label checker) and `backend/tools/check_traceability.py` (every `R<N>.<k>` of requirements.md appears in design.md and tasks.md). Read-only scripts, stdlib only, exit non-zero on failure.
     - Files: backend/tools/check_guidelines.py, backend/tools/check_changelog.py, backend/tools/check_traceability.py
     - _Requirements: 29.2, 29.3, 29.4_
-  - [ ] 22.4 Copy the final specs to the submission folder (T-80)
+  - [x] 22.4 Copy the final specs to the submission folder (T-80)
     - When the four spec files are final, copy `.kiro/specs/task-management-app/{requirements,design,tasks,CHANGELOG}.md` unchanged to `specs/` (the working copy is the source, ST-01 layout note). Run `check_traceability.py` against the copy.
     - Files: specs/requirements.md, specs/design.md, specs/tasks.md, specs/CHANGELOG.md
     - _Requirements: 29.2_
 
-- [ ] 23. Final checkpoint - all automated checks
+- [x] 23. Final checkpoint - all automated checks
   - Ensure all tests pass, ask the user if questions arise.
   - Coverage thresholds of TC-17 are configured and must pass when the suite is run: `pytest -v --cov=app --cov-fail-under=85` (at least 85 percent overall) and `coverage report --include="app/blueprints/*/service.py" --fail-under=90` (at least 90 percent for every `service.py`).
   - The Playwright `--repeat-each=3` setting (task 21.1) is configuration only; running it against the live Vercel URL is a manual step.

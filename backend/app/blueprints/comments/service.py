@@ -104,7 +104,7 @@ def update_comment_service(
     return comment
 
 
-def delete_comment_service(comment_id: Any, user_id: Any) -> dict[str, bool]:
+def delete_comment_service(comment_id: Any, user_id: Any) -> dict[str, Any]:
     user_uuid = to_uuid(user_id)
     comment = _load_active_comment(comment_id)
     load_card(comment.card_id)
@@ -114,4 +114,4 @@ def delete_comment_service(comment_id: Any, user_id: Any) -> dict[str, bool]:
     comment.deleted_at = utc_now()
     delete_comment_notifications_service(comment.id)
     db.session.commit()
-    return {'deleted': True}
+    return {'id': comment.id}

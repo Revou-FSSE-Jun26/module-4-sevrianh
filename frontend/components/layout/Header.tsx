@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <header className="flex flex-wrap items-center gap-4 border-b border-line bg-surface px-4 py-2 md:px-6">
-      <Link href="/" className="text-lg font-semibold text-primary">
+      <Link href="/" prefetch={isAuthenticated} className="text-lg font-semibold text-primary">
         Sevy
       </Link>
       {showNav && (
