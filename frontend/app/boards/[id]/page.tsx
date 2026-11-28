@@ -43,7 +43,7 @@ export default async function BoardDetailPage({ params, searchParams }: Props) {
   const isAdmin = role === 'admin';
 
   return (
-    <main className="flex h-full flex-col px-4 py-6">
+    <main className="flex h-full w-full flex-col overflow-x-hidden px-4 py-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-800">{board.name}</h1>
         {isGuest && (

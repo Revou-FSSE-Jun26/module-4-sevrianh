@@ -18,7 +18,7 @@ export default function MyTaskRow({ card }: Props) {
       </div>
       <Link
         href={`/boards/${card.board_id}?card=${card.id}`}
-        className="shrink-0 rounded bg-blue-500 px-3 py-1 text-xs font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="inline-flex min-h-11 shrink-0 items-center rounded bg-blue-500 px-3 py-2 text-xs font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         View
       </Link>

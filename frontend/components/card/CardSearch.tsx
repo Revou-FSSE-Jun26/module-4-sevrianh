@@ -23,7 +23,7 @@ export default function CardSearch({ boardId }: Props) {
         onChange={(e) => setTerm(e.target.value)}
         maxLength={100}
         placeholder="Search cards…"
-        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="min-h-11 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       {isLoading && (
         <p className="mt-1 text-xs text-gray-400">Searching…</p>

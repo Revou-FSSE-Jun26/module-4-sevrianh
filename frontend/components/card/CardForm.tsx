@@ -64,7 +64,7 @@ export default function CardForm({ columnId, members, card, onClose, onSaved }: 
           onChange={(e) => setTitle(e.target.value)}
           maxLength={200}
           required
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="min-h-11 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {error && <p role="alert" className="mt-1 text-xs text-red-600">{error}</p>}
       </div>
@@ -75,7 +75,7 @@ export default function CardForm({ columnId, members, card, onClose, onSaved }: 
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="min-h-11 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
       <div className="mb-4">
@@ -84,7 +84,7 @@ export default function CardForm({ columnId, members, card, onClose, onSaved }: 
           id="card-assignee"
           value={assigneeId}
           onChange={(e) => setAssigneeId(e.target.value)}
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="min-h-11 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Unassigned</option>
           {members.map((m) => (

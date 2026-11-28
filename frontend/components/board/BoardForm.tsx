@@ -51,7 +51,7 @@ export default function BoardForm({ onClose }: Props) {
           onChange={(e) => setName(e.target.value)}
           maxLength={100}
           required
-          className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="min-h-11 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="e.g. Project Alpha"
         />
         {error && <p role="alert" className="mt-1 text-xs text-red-600">{error}</p>}

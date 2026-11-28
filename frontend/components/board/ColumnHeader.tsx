@@ -56,7 +56,14 @@ export default function ColumnHeader({ columnId, name, cardCount, isAdmin, onRen
             maxLength={100}
           />
           <BaseButton type="submit" variant="primary">Save</BaseButton>
-          <BaseButton type="button" variant="secondary" onClick={() => setEditing(false)}>✕</BaseButton>
+          <BaseButton
+            type="button"
+            variant="secondary"
+            aria-label="Cancel rename"
+            onClick={() => setEditing(false)}
+          >
+            ✕
+          </BaseButton>
         </form>
       ) : (
         <>

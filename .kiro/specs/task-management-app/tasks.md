@@ -284,12 +284,12 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: backend/tests/unit/comments/test_comments_properties.py
     - _Requirements: 6.12, 8.17, 16.5_
 
-- [ ] 13. Analytics Blueprint
-  - [ ] 13.1 Implement the analytics Blueprint (T-45)
+- [x] 13. Analytics Blueprint
+  - [x] 13.1 Implement the analytics Blueprint (T-45)
     - `AnalyticsQuerySchema` (both dates or neither, `YYYY-MM-DD`, end not before start, at most 366 days, default last 7 days UTC); `get_board_analytics_service` computes `cards_per_column`, `completed_this_week` (Monday 00:00 UTC of the ISO week, non-deleted), `member_activity` (every current member, 0 included), `activity_per_day` (every day present) with SQLAlchemy joins and aggregates (BE-03); Admin only; route `GET /api/boards/<id>/analytics`.
     - Files: backend/app/blueprints/analytics/__init__.py, backend/app/blueprints/analytics/schema.py, backend/app/blueprints/analytics/service.py, backend/app/blueprints/analytics/routes.py, backend/app/__init__.py
     - _Requirements: 2.3, 2.6, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.10, 24.7, 24.8_
-  - [ ] 13.2 Write analytics service and route tests (T-46)
+  - [x] 13.2 Write analytics service and route tests (T-46)
     - Success and failure per service function; Member and Guest 403; invalid or single date 400; per-Column sum equals the Card total; per-day sum equals events in range; Sunday-before-week excluded; soft-deleted Cards and their events excluded; query count at most 5 for 5 Columns and 50 Cards (BE-03).
     - Files: backend/tests/unit/analytics/test_analytics_service.py, backend/tests/unit/analytics/test_analytics_routes.py
     - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 24.7, 24.8, 28.1_
@@ -432,8 +432,8 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
 - [ ] 19. Checkpoint - frontend pages
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 20. Responsive and accessibility pass
-  - [ ] 20.1 Apply the responsive and accessibility pass and add the viewport helper (T-72)
+- [x] 20. Responsive and accessibility pass
+  - [x] 20.1 Apply the responsive and accessibility pass and add the viewport helper (T-72)
     - Review every page and the Card_Detail_Modal at 375, 768 and 1280 px: mobile-first classes, no arbitrary values, `min-h-11` controls, no horizontal page scroll, Kanban scrolls inside its container (FE-13); every icon-only button has `aria-label`; all buttons are `BaseButton`.
     - `frontend/e2e/helpers/viewport.ts` exporting the three widths and an assertion `scrollWidth <= innerWidth` used by `pages.spec.ts`.
     - Files: frontend/e2e/helpers/viewport.ts, frontend/components/ (class fixes only), frontend/app/ (class fixes only)

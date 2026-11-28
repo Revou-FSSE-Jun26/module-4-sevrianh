@@ -10,7 +10,7 @@ from app.blueprints.notifications.service import (
 )
 from app.exceptions import CommentNotFoundException, CommentOwnershipError
 from app.extensions import db
-from app.models import BoardColumnEntity, BoardEntity, CardCommentEntity
+from app.models import BoardColumnEntity, BoardEntity, CardCommentEntity, UserEntity
 from app.utils.card_helpers import load_card, record_card_activity, to_uuid
 from app.utils.time import utc_now
 
@@ -31,7 +31,7 @@ def create_comment_service(card_id: Any, data: dict[str, Any], user_id: Any) -> 
     user_uuid = to_uuid(user_id)
     card = load_card(card_id)
     board = _board_for_card(card)
-    require_team_member_service(board.team_id, user_uuid)
+    require_team_member_service(board.id, user_uuid)
 
     parent_id = data.get('parent_id')
     if parent_id is not None:
@@ -47,8 +47,14 @@ def create_comment_service(card_id: Any, data: dict[str, Any], user_id: Any) -> 
     )
     db.session.add(comment)
     db.session.flush()
+    author = db.session.get(UserEntity, user_uuid)
     create_mention_notifications_service(
-        comment.id, comment.content, board.team_id, card.title, user_uuid
+        comment.id,
+        comment.content,
+        user_uuid,
+        author.name if author is not None else '',
+        card.title,
+        board.team_id,
     )
     record_card_activity(board.id, user_uuid, 'comment_added', card.id)
     db.session.commit()
@@ -85,8 +91,14 @@ def update_comment_service(
 
     board = _board_for_card(card)
     comment.content = data['content']
+    author = db.session.get(UserEntity, user_uuid)
     create_mention_notifications_service(
-        comment.id, comment.content, board.team_id, card.title, user_uuid
+        comment.id,
+        comment.content,
+        user_uuid,
+        author.name if author is not None else '',
+        card.title,
+        board.team_id,
     )
     db.session.commit()
     return comment

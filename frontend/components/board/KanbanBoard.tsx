@@ -55,7 +55,7 @@ export default function KanbanBoard({ initialBoard, isReadOnly, isAdmin, members
   }
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
+    <div className="flex w-full gap-4 overflow-x-auto pb-4">
       {columns.map((column) => (
         <BoardColumn
           key={column.id}
