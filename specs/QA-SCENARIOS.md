@@ -19,6 +19,7 @@ Requirement references (`R<N>`) point to `requirements.md`.
 | AUTH-09 | Log out, then press the browser Back button | Redirect to `/login`, no cached board data shown. | P1 | E2E |
 | AUTH-10 | The token expires while the user is on a page | The next request gives 401, a toast appears, and the user is redirected to `/login`. | P1 | UI |
 | AUTH-11 | Visit `/login` while logged in | Redirect to `/`. | P2 | E2E |
+| AUTH-12 | Register or update the profile with a whitespace-only `name` | **Open question:** the API accepts it today (201); the spec states the whitespace rule for Board, Column, Card and Comment fields only. Decide, then test. | P1 | API |
 
 ## 2. Access and permissions (R1, R2, R3)
 
@@ -96,11 +97,14 @@ Requirement references (`R<N>`) point to `requirements.md`.
 | CMT-05 | Delete a Comment with no replies | It is hidden. | P1 | API |
 | CMT-06 | Reply to a Comment that belongs to another Card | 400. | P1 | API |
 | CMT-07 | Delete a Comment | Response is `{"data": {"id": "<uuid>"}}` (R8.10). | P1 | API |
+| CMT-08 | A removed Team member edits or deletes their own earlier Comment | 403 and the Comment is unchanged (R1.1). Found on 2026-11-28, fixed, test added. | P0 | API |
+| CMT-09 | Edit or delete a Comment whose Card was soft-deleted | 404 (R6.14). Verified. | P1 | API |
 | NTF-01 | `@bob` mentioned once | One notification. | P0 | API |
 | NTF-02 | `@bob @bob` in one Comment | One notification. | P1 | API |
 | NTF-03 | A self-mention | None. | P1 | API |
 | NTF-04 | A mention of a username outside the Team, and of an unknown username | None. | P0 | API |
-| NTF-05 | `@Bob` (different case) and `email@bob.com` | Behavior is defined and tested; decide whether the email form counts. | P2 | API |
+| NTF-05 | `@Bob` (different case) | One notification (R9, OD-05). Verified. | P2 | API |
+| NTF-10 | A Comment containing an email-style token such as `x@bob.com` where `bob` is a Team username | **Open question:** one notification is created today. This follows the spec text (`@` plus 3 to 30 characters, no word boundary), but it is probably unintended. Decide, then test. | P2 | API |
 | NTF-06 | Page through the list | `page`, `per_page`, `total`, `total_pages`, `unread_count` are correct. | P1 | API |
 | NTF-07 | `per_page=0`, `-1`, `51`, or `page` past the end | 400, or an empty page; never a 500. | P1 | API |
 | NTF-08 | Mark a notification read; try another user's notification | 200, then 404. | P0 | API |
@@ -170,9 +174,19 @@ Requirement references (`R<N>`) point to `requirements.md`.
 | DAT-03 | Insert duplicate order values directly | The partial unique index rejects them; soft-deleted rows are excluded. | P1 | API |
 | DAT-04 | Delete a user who owns Cards or Comments | Defined behavior (FK rules); no orphans, no 500. | P1 | API |
 | PERF-01 | 200 concurrent users on one Board for 10 minutes | P95 of 300 ms or less, measured at the server; record in `backend/tests/load/RESULTS.md`. | P0 | load |
-| PERF-02 | The same load while 50 users move Cards | No ordering collisions or deadlocks; error rate under 1%. | P1 | load |
+| PERF-02 | The same load while 50 users move Cards | No ordering collisions or deadlocks; error rate under 1%. The script has no write mix yet. | P1 | load |
+| PERF-03 | The first requests after a server start | Record cold-start latency separately. A 20-user smoke run gave P95 253.56 ms against 58.21 ms in the steady 10-minute run. | P2 | load |
+| PERF-04 | PERF-01 on the deployed Railway API with the `Procfile` workers | Same target, recorded with Railway plan, worker class and count, database plan. Not done. | P0 | load |
+| PERF-05 | The load script under failure | Errors and responses without `X-Server-Duration-Ms` are counted and reported, never folded into the P95 (script v2). | P1 | load |
 
 ## Status notes (2026-11-28)
 
-- Covered by automated tests that currently pass: most API rows in sections 1 to 9 (646 pytest tests), COL-07, FE-01, FE-08, INV-01, DND-01, AUTH-08, AUTH-09 (logout part) via Playwright (local run only).
-- Not yet covered or not measured: PERF-01, PERF-02, API-05, API-04 on a live URL, FE-07 cookie flags review, NTF-05, MYT-02.
+Automated and passing on this machine:
+- Backend: 652 pytest tests, 99% coverage, every `service.py` at least 90%. This includes the core flow test (register to analytics).
+- Frontend: 127 Jest tests. Playwright: 20 tests, 60 of 60 with `--repeat-each=3`, against a local production build (not the live Vercel URL).
+- Verified by probe on 2026-11-28 (not yet permanent tests): MBR-02 (removing or demoting the last Admin gives 409), PRF-03 (unknown profile fields give 400), SRC-02 and SRC-03 (`%`, `_`, quotes and SQL text are treated literally; 101 characters and blanks give 400), CMT-09.
+- PERF-01 local run: P95 58.21 ms, 42,328 requests, 0 errors, 200 users, 10 minutes, Flask development server on Windows with local PostgreSQL. This is recorded in `backend/tests/load/RESULTS.md`. It does not verify the Railway target.
+
+Open decisions: AUTH-12, NTF-10.
+
+Not covered or not measured: PERF-02, PERF-04, API-05 and API-04 on a live URL, FE-07 cookie flag review, MYT-02.

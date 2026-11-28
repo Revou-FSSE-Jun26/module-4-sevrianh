@@ -86,10 +86,11 @@ def update_comment_service(
     user_uuid = to_uuid(user_id)
     comment = _load_active_comment(comment_id)
     card = load_card(comment.card_id)
+    board = _board_for_card(card)
+    require_team_member_service(board.id, user_uuid)
     if comment.author_id != user_uuid:
         raise CommentOwnershipError()
 
-    board = _board_for_card(card)
     comment.content = data['content']
     author = db.session.get(UserEntity, user_uuid)
     create_mention_notifications_service(
@@ -107,7 +108,8 @@ def update_comment_service(
 def delete_comment_service(comment_id: Any, user_id: Any) -> dict[str, Any]:
     user_uuid = to_uuid(user_id)
     comment = _load_active_comment(comment_id)
-    load_card(comment.card_id)
+    board = _board_for_card(load_card(comment.card_id))
+    require_team_member_service(board.id, user_uuid)
     if comment.author_id != user_uuid:
         raise CommentOwnershipError()
 

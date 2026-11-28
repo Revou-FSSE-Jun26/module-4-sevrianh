@@ -14,8 +14,9 @@ from dotenv import load_dotenv
 # the setdefault calls below, because load_dotenv() never overrides an existing variable.
 load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
-os.environ.setdefault(
-    'DATABASE_URL', 'postgresql+psycopg2://user:password@localhost:5432/sevy_test')
+# Tests always use TEST_DATABASE_URL (sevy_test), never the application DATABASE_URL (sevy).
+os.environ['DATABASE_URL'] = os.environ.get(
+    'TEST_DATABASE_URL', 'postgresql+psycopg2://user:password@localhost:5432/sevy_test')
 os.environ.setdefault('JWT_SECRET_KEY', 'test-secret-key-with-at-least-32-characters')
 os.environ.setdefault('CORS_ORIGINS', 'http://localhost:3000')
 

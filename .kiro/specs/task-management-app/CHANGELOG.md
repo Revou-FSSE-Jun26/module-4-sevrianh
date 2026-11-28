@@ -474,3 +474,23 @@
 - `check_changelog.py` reports that V2 to V5 lack the `**Prompt**`, `**Before**`, `**After**` labels (TC-21). Historical entries were not edited.
 - Optional property tests (T-12, T-15, T-20, T-23, T-24, T-28, T-30 to T-33, T-35, T-38, T-39, T-44, T-47, T-48) are not written.
 - NFR-01 is still "not measured"; no load test has been run.
+
+### Implementation update - 2026-11-28, second pass (V10, no specification version change)
+**Specification changes**
+- None.
+**Design changes**
+- None.
+**Implementation changes**
+- `backend/tests/load/load_test.py` v2: added `--seed` (creates a user and a Board with 5 Columns and 50 Cards), and counts failed requests and responses without `X-Server-Duration-Ms` separately instead of dropping them or counting them as 0 ms. Before, a failed request vanished and a missing header lowered the P95.
+- `backend/tests/load/RESULTS.md`: first recorded run (see Evidence). The status is "measured locally only; not measured on Railway".
+- `specs/QA-SCENARIOS.md`: QA scenario catalogue added to the submission folder, with six new scenarios from this sweep (AUTH-12, CMT-08, CMT-09, NTF-10, PERF-03 to PERF-05).
+**Bug fixes**
+- A Team member who had been removed could still `PATCH` and `DELETE` their own earlier Comments (200) while getting 403 on the Board and on creating Comments (R1.1). `update_comment_service` and `delete_comment_service` now require Team membership first. Regression test: `test_removed_member_cannot_edit_or_delete_own_comment`.
+**Breaking changes**
+- None.
+**Evidence (this machine, nothing deployed)**
+- Backend: 652 passed, coverage 99.06%, every `service.py` at least 90%, `flake8 app tests tools` clean.
+- PERF-01, local run on 2026-11-28 (200 virtual users, 600 s): 42,328 requests, 0 errors, P50 27.26 ms, P95 58.21 ms, maximum 423.82 ms. Flask development server (Gunicorn does not run on Windows) and local PostgreSQL 18.4, load generator on the same machine. This does not verify NFR-01 on Railway.
+**Known open items**
+- Open decisions, not changed because the spec is silent or permits the behavior: a whitespace-only user `name` is accepted at registration; an email-style token such as `x@bob.com` notifies the member `bob` (R9, OD-05 define no word boundary).
+- PERF-01 on the deployed Railway API and the mixed read and write load (PERF-02) are not done.

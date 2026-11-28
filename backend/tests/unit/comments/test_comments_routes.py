@@ -198,3 +198,17 @@ def test_delete_comment_route_rejects_guest(client, world, factory):
     resp = client.delete(
         f'/api/comments/{comment.id}', headers={'X-Invite-Token': invite['token']})
     assert resp.status_code == 401
+
+
+def test_removed_member_cannot_edit_or_delete_own_comment(client, world, auth, factory):
+    from app.blueprints.boards.service import remove_team_member_service
+
+    comment = factory.comment(world.card, world.member, content='mine')
+    factory.session.commit()
+    remove_team_member_service(world.board.id, world.admin.id, world.member.id)
+    headers = auth(world.member)
+    edit = client.patch(f'/api/comments/{comment.id}', json={'content': 'x'}, headers=headers)
+    delete = client.delete(f'/api/comments/{comment.id}', headers=headers)
+    assert edit.status_code == 403 and delete.status_code == 403
+    factory.session.refresh(comment)
+    assert comment.content == 'mine' and comment.deleted_at is None
