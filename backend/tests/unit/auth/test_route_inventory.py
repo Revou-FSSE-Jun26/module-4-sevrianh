@@ -18,7 +18,8 @@ ROUTES = {
     ('PATCH', '/api/users/me'), ('GET', '/api/health'), ('GET', '/api/cards'),
     ('POST', '/api/boards/<board_id>/members'),
     ('DELETE', '/api/boards/<board_id>/members/<user_id>'),
-    ('GET', '/api/boards/<board_id>/members'), ('PATCH', '/api/boards/<board_id>/members/<user_id>'),
+    ('GET', '/api/boards/<board_id>/members'),
+    ('PATCH', '/api/boards/<board_id>/members/<user_id>'),
     ('POST', '/api/boards/<board_id>/invite-links'),
     ('DELETE', '/api/boards/<board_id>/invite-links/<invite_id>'),
 }

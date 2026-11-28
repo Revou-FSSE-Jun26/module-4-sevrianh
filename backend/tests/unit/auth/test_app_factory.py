@@ -2,10 +2,7 @@
 
 
 def test_app_factory_registers_health_and_eight_blueprints(app):
-    rules = [(rule.rule, tuple(sorted(rule.methods - {'HEAD', 'OPTIONS'})))
-             for rule in app.url_map.iter_rules() if rule.rule.startswith('/api/')]
-
-    assert app.view_functions['health.health_route']
+    assert 'health.health_route' in app.view_functions
     for blueprint in (
         'analytics', 'auth', 'boards', 'cards', 'columns',
         'comments', 'notifications', 'users',

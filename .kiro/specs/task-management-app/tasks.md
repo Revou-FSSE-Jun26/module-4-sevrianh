@@ -458,13 +458,13 @@ This plan implements Sevy from requirements.md (V9) and design.md in dependency 
     - Files: frontend/e2e/pages.spec.ts
     - _Requirements: 21.1, 23.1, 23.2, 23.3, 27.9_
 
-- [ ] 22. Repository documentation
-  - [ ] 22.1 Write README.md with a project brief and screenshot placeholders (T-77)
+- [x] 22. Repository documentation
+  - [x] 22.1 Write README.md with a project brief and screenshot placeholders (T-77)
     - Sections of R29.7: overview, AI workflow summary, features implemented, technologies, local run steps, test steps for pytest, `npm test` and Playwright, and a "Screenshots to capture" list (Postman for all 8 Blueprints, each major page, a Card being dragged, the Playwright report) with placeholders only; no URLs, no fake screenshots.
     - Project brief (R29.8): overview, roles (Team Admin, Team Member, Guest), core features, tech stack and at least two non-functional requirements (NFR-01 target not measured, NFR-02).
     - Files: README.md
     - _Requirements: 17.1, 29.7, 29.8_
-  - [ ] 22.2 Create the guideline violation report skeleton (T-78)
+  - [x] 22.2 Create the guideline violation report skeleton (T-78)
     - `guidelines/VIOLATIONS.md` with the `### V-nn` entry template (guideline ID, file and line, what the AI produced, the fix) and a before/after table with empty measured numbers. Do not add example violations; real entries are added when found.
     - Files: guidelines/VIOLATIONS.md
     - _Requirements: 29.5_
