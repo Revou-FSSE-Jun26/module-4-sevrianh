@@ -25,13 +25,17 @@ def create_app() -> Flask:
 
 
 def register_blueprints(app: Flask) -> None:
-    """Feature Blueprint registration point; the remaining Blueprints are added by task 14.1."""
+    """Feature Blueprint registration point; comments and analytics are added by task 14.1."""
     from app.blueprints.auth import auth_bp
     from app.blueprints.boards import boards_bp
+    from app.blueprints.cards import cards_bp
     from app.blueprints.columns import columns_bp
+    from app.blueprints.notifications import notifications_bp
     from app.blueprints.users import users_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(boards_bp)
+    app.register_blueprint(cards_bp)
     app.register_blueprint(columns_bp)
+    app.register_blueprint(notifications_bp)
     app.register_blueprint(users_bp)

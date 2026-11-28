@@ -101,3 +101,19 @@ export interface MoveCardResult {
   card: Card;
   rebalanced: boolean;
 }
+
+export interface TeamMember {
+  user_id: string;
+  name: string;
+  username: string;
+  role: 'admin' | 'member';
+}
+
+export interface AnalyticsData {
+  cards_per_column: { column_id: string; column_name: string; count: number }[];
+  completed_this_week: number;
+  member_activity: { user_id: string; name: string; username: string; event_count: number }[];
+  activity_per_day: { date: string; count: number }[];
+  start_date: string;
+  end_date: string;
+}

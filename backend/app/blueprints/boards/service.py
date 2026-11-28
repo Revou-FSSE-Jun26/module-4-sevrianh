@@ -25,6 +25,7 @@ from app.models import (
     TeamMembershipEntity,
     UserEntity,
 )
+from app.blueprints.notifications.service import delete_team_member_notifications_service
 from app.utils import invite_links as il, team_members as tm
 from app.utils.auth import Access
 
@@ -110,10 +111,7 @@ def list_boards_service(user_id: Any) -> list[BoardEntity]:
 
 
 def get_board_service(board_id: Any, access: Access) -> BoardEntity:
-    """Board with Columns and Cards in two queries (R4.6, R14.2).
-
-    The guard already authorized `access` (Member, Admin or Guest), so the Board is read only.
-    """
+    """Board with Columns and Cards; `access` is already authorized (R4.6, R14.2)."""
     board = _load_board(board_id)
     columns = (
         db.session.query(BoardColumnEntity)
@@ -221,6 +219,7 @@ def remove_team_member_service(board_id: Any, user_id: Any, target_id: Any) -> d
     removed_id = str(target.user_id)
     try:
         tm.clear_assignee(board.team_id, target.user_id)
+        delete_team_member_notifications_service(target.user_id, board.team_id)
         db.session.delete(target)
         db.session.commit()
     except Exception:
